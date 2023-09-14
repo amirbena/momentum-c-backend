@@ -9,7 +9,7 @@ export class UsersController {
 
     @Post('/')
     @UsePipes(ValidationPipe)
-    async createUser(@Body() user: User) {
+    async register(@Body() user: User) {
         await this.userService.createUser(user);
     }
 }
