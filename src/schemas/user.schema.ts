@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { MaxLength, IsNotEmpty, Matches, IsEmail, IsEnum } from 'class-validator';
-import { HydratedDocument, Model } from 'mongoose';
-import { ACCESS_LAYERS, ISRAELI_PHONE_REGEX, MAX_EMAIL_LENGTH, MAX_NAME_LENGTH, MAX_PHONE_LENGTH } from 'src/constants/constants';
+import { HydratedDocument } from 'mongoose';
+import { AccessLayer, MAX_EMAIL_LENGTH, MAX_NAME_LENGTH, MAX_PHONE_LENGTH, PASSWORD_LENGTH } from 'src/constants/constants';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -9,26 +8,19 @@ export type UserDocument = HydratedDocument<User>;
 export class User {
 
     @Prop({ required: true, maxlength: MAX_NAME_LENGTH })
-    @IsNotEmpty()
-    @MaxLength(MAX_NAME_LENGTH)
     fullName: string;
 
     @Prop({ required: true, maxlength: MAX_PHONE_LENGTH })
-    @IsNotEmpty()
-    @MaxLength(MAX_PHONE_LENGTH)
-    @Matches(ISRAELI_PHONE_REGEX)
     phoneNumber: string;
 
     @Prop({ required: true, maxlength: MAX_EMAIL_LENGTH })
-    @IsNotEmpty()
-    @MaxLength(MAX_EMAIL_LENGTH)
-    @IsEmail()
     email: string;
 
-    @Prop({ required: true })
-    @IsNotEmpty()
-    @IsEnum(ACCESS_LAYERS)
-    accessLayer: ACCESS_LAYERS;
+    @Prop({ required: true, type: String })
+    password: string;
+
+    @Prop({ required: true, type: String })
+    accessLayer: AccessLayer;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
