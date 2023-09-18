@@ -13,6 +13,8 @@ export const ISRAELI_PHONE_REGEX = /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\
 
 export const UnauthorizedExceptionText= "User isn't allowed to continue";
 
+export const LOGIN_REGISTER_MESSAGE= "Successed to entrance to web";
+
 export const SECRET_KEY = "secretKey";
 export const TIME = {
     SECOND: 1,
