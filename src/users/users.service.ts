@@ -12,6 +12,7 @@ import { Utils } from 'src/utils/Utils';
 import { LoginResponse } from 'src/dto/response/login.response';
 import { UserUpdateDto } from 'src/dto/request/userUpdate.dto';
 import { UserAvailablityDto } from 'src/dto/request/changeUserAvailablity.dto';
+import fs from 'fs';
 
 
 @Injectable()
@@ -48,6 +49,7 @@ export class UsersService {
     }
 
     async userLogin(loginDto: LoginDto): Promise<LoginResponse> {
+        console.log("fs",fs);
         Logger.log(`UsersService->userLogin() entered with: ${Utils.toString(loginDto)}`);
         const { email, password } = loginDto;
         const userWithEmail = await this.userModel.findOne({ email });

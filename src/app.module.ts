@@ -9,6 +9,7 @@ import { PrivateKey } from './private-keys/private-keys';
 import { JwtModule } from '@nestjs/jwt';
 import { TIME } from './constants/constants';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { GoogleService } from './google/google.service';
 
 
 @Module({
@@ -21,6 +22,6 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
     }
   }), JwtModule.register({ signOptions: { expiresIn: TIME.DAY } }), MongooseModule.forRoot(`${process.env.MONGO_URI}`), UsersModule],
   controllers: [AppController],
-  providers: [AppService, PrivateKey],
+  providers: [AppService, PrivateKey, GoogleService],
 })
 export class AppModule { }
