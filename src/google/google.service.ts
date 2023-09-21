@@ -53,7 +53,6 @@ export class GoogleService {
             }
         })
 
-        await this.redis.set("Item", folder.data.id);
         return folder.data;
 
     }
