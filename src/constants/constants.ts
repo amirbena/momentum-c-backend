@@ -11,13 +11,16 @@ export const BCRYPT_ROUNDS = 10;
 export const ISRAELI_PHONE_REGEX = /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\.|-)?([1-9]\d?))|(0[23489]{1})|(0[57]{1}[0-9]))(?:\s|\.|-)?([^0\D]{1}\d{2}(?:\s|\.|-)?\d{4})$/;
 
 
-export const UnauthorizedExceptionText= "User isn't allowed to continue";
+export const UnauthorizedExceptionText = "User isn't allowed to continue";
 
 
 export const FOLDER_TO_ADD = "יישום  עמיר המלך";
 export const FOLDER_MEDIA_TYPE_DRIVE = "application/vnd.google-apps.folder";
 
-export const LOGIN_REGISTER_MESSAGE= "Successed to entrance to web";
+export const LOGIN_REGISTER_MESSAGE = "Successed to entrance to web";
+
+
+export const SHEETS_CONTANT = '1EPH9vTeakgHbSsWmOpjJ3JlG4RB00fDdG1CheZRR_ds';
 
 
 export const SECRET_KEY = "secretKey";
