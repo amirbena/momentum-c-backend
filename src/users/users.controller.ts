@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UsePipes, ValidationPipe, Logger, Res, Get, UseGuards, Put, Delete, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UserDto } from 'src/dto/request/user.dto';
-import { LoginDto } from 'src/dto/request/login.dto';
+import { UserDto } from 'src/dto/request/users/user.dto';
+import { LoginDto } from 'src/dto/request/users/login.dto';
 import { Response } from 'express';
 import { Utils } from 'src/utils/Utils';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
@@ -9,9 +9,9 @@ import { UserDocument } from 'src/schemas/user.schema';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
 import { Roles } from 'src/guards/roles/roles.decorator';
 import { AccessLayer } from 'src/constants/constants';
-import { UserUpdateDto } from 'src/dto/request/userUpdate.dto';
+import { UserUpdateDto } from 'src/dto/request/users/userUpdate.dto';
 import { Types } from 'mongoose';
-import { UserAvailablityDto } from 'src/dto/request/changeUserAvailablity.dto';
+import { UserAvailablityDto } from 'src/dto/request/users/changeUserAvailablity.dto';
 
 
 @Controller('users')

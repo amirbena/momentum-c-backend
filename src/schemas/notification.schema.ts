@@ -14,9 +14,14 @@ export class Notification {
     @Prop({ required: true, maxlength: MAX_NAME_LENGTH })
     description: string;
 
-    @Prop({type: [{ type: Types.ObjectId, ref: 'User' }] })
-    usersToPing: User[]
+    @Prop({ required: true, type: [{ type: Types.ObjectId, ref: 'User' }] })
+    usersSent: User[];
 
+    @Prop({ required: true, default: false })
+    isRead?: boolean = false;
+
+    @Prop({ required: true, type: Date })
+    creationDate: Date;
 
 
 }

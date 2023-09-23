@@ -13,5 +13,5 @@ export class CreateNotificationDto {
 
     @IsNotEmpty()
     @IsArray()
-    usersIdsToPing: Types.ObjectId[];
+    userSentIds: Types.ObjectId[];
 }

@@ -1,10 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsUUID } from "class-validator";
+import { IsBoolean, IsNotEmpty } from "class-validator";
 import { Types } from "mongoose";
-
+import { IsObjectId } from 'class-validator-mongo-object-id';
 export class UserAvailablityDto {
 
     @IsNotEmpty()
-    @IsUUID("4")
+    @IsObjectId()
     id: Types.ObjectId;
 
     @IsNotEmpty()

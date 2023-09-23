@@ -4,14 +4,14 @@ import { Model, Types } from 'mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import { PrivateKey } from 'src/private-keys/private-keys';
-import { UserDto } from 'src/dto/request/user.dto';
+import { UserDto } from 'src/dto/request/users/user.dto';
 import * as bcrypt from 'bcrypt';
 import { AccessLayer, BCRYPT_ROUNDS, TIME, LOGIN_REGISTER_MESSAGE } from 'src/constants/constants';
-import { LoginDto } from 'src/dto/request/login.dto';
+import { LoginDto } from 'src/dto/request/users/login.dto';
 import { Utils } from 'src/utils/Utils';
 import { LoginResponse } from 'src/dto/response/login.response';
-import { UserUpdateDto } from 'src/dto/request/userUpdate.dto';
-import { UserAvailablityDto } from 'src/dto/request/changeUserAvailablity.dto';
+import { UserUpdateDto } from 'src/dto/request/users/userUpdate.dto';
+import { UserAvailablityDto } from 'src/dto/request/users/changeUserAvailablity.dto';
 import fs from 'fs';
 
 
