@@ -6,18 +6,22 @@ import { JwtService } from '@nestjs/jwt';
 import { PrivateKey } from 'src/private-keys/private-keys';
 import { UserDto } from 'src/dto/request/users/user.dto';
 import * as bcrypt from 'bcrypt';
-import { AccessLayer, BCRYPT_ROUNDS, TIME, LOGIN_REGISTER_MESSAGE } from 'src/constants/constants';
+import { AccessLayer, BCRYPT_ROUNDS, TIME, LOGIN_REGISTER_MESSAGE, EMAIL_ID, RAND_TOKEN_SIZE } from 'src/constants/constants';
 import { LoginDto } from 'src/dto/request/users/login.dto';
 import { Utils } from 'src/utils/Utils';
 import { LoginResponse } from 'src/dto/response/login.response';
 import { UserUpdateDto } from 'src/dto/request/users/userUpdate.dto';
 import { UserAvailablityDto } from 'src/dto/request/users/changeUserAvailablity.dto';
 import fs from 'fs';
+import { ForgotPasswordDto } from 'src/dto/request/users/forgotPassword.dto';
+import { EmailOptions } from 'src/mail/mailOptions.model';
+import { generate } from 'rand-token';
+import { MailService } from 'src/mail/mail.service';
 
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel(User.name) private userModel: Model<User>, private jwtService: JwtService, private privateKey: PrivateKey) { }
+    constructor(@InjectModel(User.name) private userModel: Model<User>, private jwtService: JwtService, private privateKey: PrivateKey, private mailService: MailService) { }
 
     async createUser(userdto: UserDto): Promise<LoginResponse> {
         Logger.log(`UsersService->createUser() entered with: ${Utils.toString(userdto)}`);
@@ -49,7 +53,7 @@ export class UsersService {
     }
 
     async userLogin(loginDto: LoginDto): Promise<LoginResponse> {
-        console.log("fs",fs);
+        console.log("fs", fs);
         Logger.log(`UsersService->userLogin() entered with: ${Utils.toString(loginDto)}`);
         const { email, password } = loginDto;
         const userWithEmail = await this.userModel.findOne({ email });
@@ -125,5 +129,42 @@ export class UsersService {
         }
         updatedItem.isBanned = isBanned;
         return updatedItem;
+    }
+
+    private createForgotPasswordUrlWithToken(token: string, language: string) {
+        const messages = {
+            English: `<p>You requested for reset password, kindly use this <a href="${process.env.FRONTEND_URI}/reset-password?token=' + ${token} + '">link</a> to reset your password</p>`,
+            Hebrew: `<p>ביקשת לשנות את הסיסמה שלך, ניתן להשתמש בקישור הבא: <a href="${process.env.FRONTEND_URI}/reset-password?token=' + ${token} + '">link</a> כדי לעדכן את הסיסמה שלך `
+        }
+        const subjects = {
+            English: "Did you forget your password?",
+            Hebrew: "האם שכחת את הסיסמה שלך"
+        }
+        return {
+            subject: subjects[language] || "",
+            html: messages[language] || ""
+        }
+    }
+
+    async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+        Logger.log(`UsersService->forgotPassword() entered with: ${Utils.toString(forgotPasswordDto)}`);
+        const { email, language } = forgotPasswordDto;
+        const isEmailFound = await this.userModel.findOne({ email });
+        if (!isEmailFound) {
+            Logger.warn(`UsersService->forgotPassword() email is not found`);
+            throw new NotFoundException(`Email isn't found of reset password`);
+        }
+        const token = generate(RAND_TOKEN_SIZE);
+        const { subject, html } = this.createForgotPasswordUrlWithToken(token, language);
+        const emailOptions: EmailOptions = {
+            from: EMAIL_ID,
+            to: email,
+            subject,
+            html
+        }
+
+        const isSent = await this.mailService.sendEmail(emailOptions);
+        Logger.log(`UsersService->forgotPassword() got ${Utils.toString(isSent)}`);
+        return isSent;
     }
 }

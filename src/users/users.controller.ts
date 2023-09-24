@@ -12,6 +12,7 @@ import { AccessLayer } from 'src/constants/constants';
 import { UserUpdateDto } from 'src/dto/request/users/userUpdate.dto';
 import { Types } from 'mongoose';
 import { UserAvailablityDto } from 'src/dto/request/users/changeUserAvailablity.dto';
+import { ForgotPasswordDto } from 'src/dto/request/users/forgotPassword.dto';
 
 
 @Controller('users')
@@ -63,7 +64,7 @@ export class UsersController {
     @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
-    async deleteUser(@Param('id') id: Types.ObjectId){
+    async deleteUser(@Param('id') id: Types.ObjectId) {
         Logger.log(`UsersController->deleteUser() entered with: ${Utils.toString(id)}`);
         const deletedId = await this.userService.deleteUser(id);
         Logger.log(`UsersController->deleteUser() got: ${id}`);
@@ -71,15 +72,21 @@ export class UsersController {
 
     }
 
-    @Put('/suspendUser')
+    @Put('/suspend-user')
     @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
-    async changeUserAvailabilty(@Body() userAvailablityDto: UserAvailablityDto){
+    async changeUserAvailabilty(@Body() userAvailablityDto: UserAvailablityDto) {
         Logger.log(`UsersController->changeUserAvailabilty() entered with: ${Utils.toString(userAvailablityDto)}`);
         const result = await this.userService.changeUserAvaialblity(userAvailablityDto);
         Logger.log(`UsersController->changeUserAvailabilty() got: ${Utils.toString(result)}`);
         return result;
 
+    }
+
+    @Put('/forgot-password')
+    @UsePipes(ValidationPipe)
+    async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto){
+        return await this.userService.forgotPassword(forgotPasswordDto);
     }
 }

@@ -10,7 +10,7 @@ export class UpdateNotificationDto {
     @IsObjectId()
     notificationId: Types.ObjectId;
 
-    @IsNotEmpty()
+    @IsOptional()
     @MaxLength(MAX_NAME_LENGTH)
     headline?: string;
 

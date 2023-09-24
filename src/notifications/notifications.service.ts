@@ -58,7 +58,7 @@ export class NotificationsService {
                 updatedItem[key] = value;
             }
         });
-        Logger.log(`NotificationsService->getAllNotificationsByUser() got: ${Utils.toString(updatedItem)}`)
+        Logger.log(`NotificationsService->updateNotification() got: ${Utils.toString(updatedItem)}`)
         return updatedItem;
     }
 

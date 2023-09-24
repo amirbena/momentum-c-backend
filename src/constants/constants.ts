@@ -22,6 +22,7 @@ export const LOGIN_REGISTER_MESSAGE = "Successed to entrance to web";
 
 export const SHEETS_CONTANT = '1EPH9vTeakgHbSsWmOpjJ3JlG4RB00fDdG1CheZRR_ds';
 
+export const RAND_TOKEN_SIZE = 20;
 
 export const SECRET_KEY = "secretKey";
 export const TIME = {
@@ -39,3 +40,6 @@ export enum AccessLayer {
     ADMIN = "admin",
     SUPER_ADMIN = "super admin"
 }
+
+export const EMAIL_ID = "amir@futuresolutions.app";
+export const EMAIL_PASSWORD = "AmirFutureS1!";

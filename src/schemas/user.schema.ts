@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument} from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { AccessLayer, MAX_EMAIL_LENGTH, MAX_NAME_LENGTH, MAX_PHONE_LENGTH, PASSWORD_LENGTH } from 'src/constants/constants';
 
 export type UserDocument = HydratedDocument<User>;
@@ -23,7 +23,10 @@ export class User {
     accessLayer: AccessLayer;
 
     @Prop({ required: true, default: false })
-    isBanned?: boolean;
+    isBanned?: boolean = false;
+
+    @Prop({ required: true, default: '' })
+    resetToken?: string = "";
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
