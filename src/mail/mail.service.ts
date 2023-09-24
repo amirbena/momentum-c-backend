@@ -8,10 +8,12 @@ import { Utils } from 'src/utils/Utils';
 export class MailService {
 
     private emailTransporter: Transporter = createTransport({
-        service: 'gmail',
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
         auth: {
-            user: EMAIL_ID, // Your email id
-            pass: EMAIL_PASSWORD // Your password
+            user: EMAIL_ID , /* "lwkymmwty28@gmail.com", */ // Your email id
+            pass: EMAIL_PASSWORD /* "Moti12345678!" */ // Your password
         }
     });
 
