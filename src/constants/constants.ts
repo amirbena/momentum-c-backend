@@ -36,7 +36,8 @@ export const TIME = {
 }
 export enum AccessLayer {
     VISITOR = "visitor",
-    PAYER = "payer",
+    PAYER_CLIENT = "client",
+    EMPLOYEE = "employee",
     ADMIN = "admin",
     SUPER_ADMIN = "super admin"
 }

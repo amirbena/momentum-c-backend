@@ -23,7 +23,10 @@ export class User {
     accessLayer: AccessLayer;
 
     @Prop({ required: true, default: false })
-    isBanned?: boolean = false;
+    isBannedTemporary?: boolean = false;
+
+    @Prop({ required: true, default: false })
+    isForverBanned?: boolean = false;
 
     @Prop({ required: true, default: '' })
     resetToken?: string = "";

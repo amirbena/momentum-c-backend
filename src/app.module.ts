@@ -11,6 +11,7 @@ import { TIME } from './constants/constants';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { GoogleService } from './google/google.service';
 import { NotificationsModule } from './notifications/notifications.module';
+import { VideosModule } from './videos/videos.module';
 
 
 @Module({
@@ -21,7 +22,7 @@ import { NotificationsModule } from './notifications/notifications.module';
       port: parseInt(process.env.REDIS_PORT)
 
     }
-  }), JwtModule.register({ signOptions: { expiresIn: TIME.DAY } }), MongooseModule.forRoot(`${process.env.MONGO_URI}`), UsersModule, NotificationsModule],
+  }), JwtModule.register({ signOptions: { expiresIn: TIME.DAY } }), MongooseModule.forRoot(`${process.env.MONGO_URI}`), UsersModule, NotificationsModule, VideosModule],
   controllers: [AppController],
   providers: [AppService, PrivateKey, GoogleService],
 })
