@@ -1,6 +1,6 @@
 export class Utils {
 
-    static toString(object: Record<any, any> | any): string {
+    static toString<T>(object: T): string {
         return JSON.stringify(object);
     }
 }
