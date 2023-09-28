@@ -72,6 +72,18 @@ export class UsersController {
 
     }
 
+    @Delete('/ban-forver/:id')
+    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN)
+    @UseGuards(AuthGuard, RolesGuard)
+    @UsePipes(ValidationPipe)
+    async banUserForver(@Param('id') id: Types.ObjectId) {
+        Logger.log(`UsersController->banUserForver() entered with: ${Utils.toString(id)}`);
+        const deletedForverUser = await this.userService.banUser(id);
+        Logger.log(`UsersController->banUserForver() got: ${deletedForverUser}`);
+        return deletedForverUser;
+
+    }
+
     @Put('/suspend-user')
     @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN)
     @UseGuards(AuthGuard, RolesGuard)

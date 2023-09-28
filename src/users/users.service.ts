@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, Logger, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, ConflictException, Logger, InternalServerErrorException, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
@@ -60,6 +60,11 @@ export class UsersService {
         if (!userWithEmail) {
             Logger.warn(`UsersService->userLogin() email not found in DB`);
             throw new NotFoundException("email not found");
+        }
+        if (userWithEmail.isForverBanned) {
+            Logger.warn(`UsersService->userLogin() banned user tried to this section`);
+            throw new ForbiddenException("User isn't allowed use this application");
+
         }
         const samePassword = await bcrypt.compare(password, userWithEmail.password);
         if (!samePassword) {
@@ -127,7 +132,7 @@ export class UsersService {
             Logger.warn(`UsersService->changeUserAvaialblity() can't found id, can't update`);
             throw new NotFoundException("Can't find id");
         }
-        updatedItem.isBanned = isBanned;
+        updatedItem.isBannedTemporary = isBanned;
         return updatedItem;
     }
 
@@ -166,5 +171,16 @@ export class UsersService {
         const isSent = await this.mailService.sendEmail(emailOptions);
         Logger.log(`UsersService->forgotPassword() got ${Utils.toString(isSent)}`);
         return isSent;
+    }
+
+    async banUser(userId: Types.ObjectId) {
+        Logger.log(`UsersService->banUser() entered with: ${Utils.toString(userId)}`);
+        let updatedItem = await this.userModel.findByIdAndUpdate(userId, { isForverBanned: true });
+        if (!updatedItem) {
+            Logger.warn(`UUsersService->banUser() can't found id, can't update`);
+            throw new NotFoundException("Can't find id");
+        }
+        updatedItem.isForverBanned = true;
+        return updatedItem;
     }
 }

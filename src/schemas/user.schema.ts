@@ -30,6 +30,9 @@ export class User {
 
     @Prop({ required: true, default: '' })
     resetToken?: string = "";
+
+    @Prop({ required: true, default: '' })
+    driveLink?: string = "";
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

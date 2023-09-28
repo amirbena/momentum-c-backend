@@ -13,7 +13,6 @@ export const ISRAELI_PHONE_REGEX = /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\
 
 export const UnauthorizedExceptionText = "User isn't allowed to continue";
 
-
 export const FOLDER_TO_ADD = "יישום  עמיר המלך";
 export const FOLDER_MEDIA_TYPE_DRIVE = "application/vnd.google-apps.folder";
 
@@ -40,6 +39,10 @@ export enum AccessLayer {
     EMPLOYEE = "employee",
     ADMIN = "admin",
     SUPER_ADMIN = "super admin"
+}
+
+export enum VideoSection {
+    General = "general"
 }
 
 export const EMAIL_ID = "amir@futuresolutions.app";
