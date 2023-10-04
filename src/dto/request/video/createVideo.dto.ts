@@ -1,6 +1,9 @@
-import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsEnum, IsNotEmpty, IsUrl, MaxLength, ValidateNested } from "class-validator";
+import { ArrayMinSize, IsArray, IsEnum, IsNotEmpty, IsUrl, MaxLength } from "class-validator";
 import { AccessLayer, MAX_NAME_LENGTH, VideoSection } from "src/constants/constants";
+import { IsAccessLayerArray } from "src/decorators/isAccessLayerArray.decorator";
+
+
+
 
 export class CreateVideoDto {
 
@@ -19,11 +22,8 @@ export class CreateVideoDto {
     @IsNotEmpty()
     @IsArray()
     @ArrayMinSize(1)
-    @ValidateNested({ each: true })
-    @Type(() => String)
+    @IsAccessLayerArray()
     accessLayers: AccessLayer[] = [AccessLayer.VISITOR];
-
-
 
     @IsNotEmpty()
     @IsUrl()

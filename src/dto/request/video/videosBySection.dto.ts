@@ -5,7 +5,7 @@ export class VideosBySection {
 
     @IsNotEmpty()
     @IsEnum(VideoSection)
-    videoSection: VideoSection;
+    section: VideoSection;
 
     @IsOptional()
     @IsEnum(AccessLayer)

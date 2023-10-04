@@ -28,8 +28,8 @@ export class VideosService {
 
     async getVideosBySection(videosBySection: VideosBySection): Promise<VideoDocument[]> {
         Logger.log(`VideosService->getVideoBySection() entered with: ${Utils.toString(videosBySection)}`);
-        const { videoSection, accessLayer } = videosBySection;
-        const videos = await this.videoModel.find({ videoSection, accessLayers: { "$elemMatch": accessLayer } });
+        const { section, accessLayer } = videosBySection;
+        const videos = await this.videoModel.find({ section, accessLayers: { "$in": [accessLayer] } });
         if (!videos.length) {
             throw new NotFoundException([], `Not videos found`);
         }
