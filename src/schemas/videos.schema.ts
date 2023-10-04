@@ -16,6 +16,9 @@ export class Video {
     @Prop({ required: true, type: String })
     section: VideoSection;
 
+    @Prop({ required: true, type: Array, default: [AccessLayer.VISITOR] })
+    accessLayers: AccessLayer[];
+
     @Prop({ required: true, type: String })
     link: string;
 
