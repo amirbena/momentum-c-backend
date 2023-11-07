@@ -28,10 +28,10 @@ export class User {
     @Prop({ required: true, default: false })
     isForverBanned?: boolean = false;
 
-    @Prop({ required: true, default: '' })
+    @Prop({ required: false, default: '' })
     resetToken?: string = "";
 
-    @Prop({ required: true, default: '' })
+    @Prop({ required: false, default: '' })
     driveLink?: string = "";
 }
 
