@@ -17,13 +17,17 @@ import { ForgotPasswordDto } from 'src/dto/request/users/forgotPassword.dto';
 import { EmailOptions } from 'src/mail/mailOptions.model';
 import { generate } from 'rand-token';
 import { MailService } from 'src/mail/mail.service';
+import { RegisterResponse } from 'src/dto/response/register.response';
+import { ResetPasswordDto } from 'src/dto/request/users/resetPassword.dto';
+import { AccessTokenDto } from 'src/dto/request/users/accessToken.dto';
+import { AccessTokenResponse } from 'src/dto/response/accessToken.response';
 
 
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User.name) private userModel: Model<User>, private jwtService: JwtService, private privateKey: PrivateKey, private mailService: MailService) { }
 
-    async createUser(userdto: UserDto): Promise<LoginResponse> {
+    async createUser(userdto: UserDto): Promise<RegisterResponse> {
         Logger.log(`UsersService->createUser() entered with: ${Utils.toString(userdto)}`);
         const sameEmail = await this.userModel.find({ email: userdto.email });
         if (sameEmail.length) {
@@ -138,8 +142,8 @@ export class UsersService {
 
     private createForgotPasswordUrlWithToken(token: string, language: string) {
         const messages = {
-            English: `<p>You requested for reset password, kindly use this <a href="${process.env.FRONTEND_URI}/reset-password?token=' + ${token} + '">link</a> to reset your password</p>`,
-            Hebrew: `<p>ביקשת לשנות את הסיסמה שלך, ניתן להשתמש בקישור הבא: <a href="${process.env.FRONTEND_URI}/reset-password?token=' + ${token} + '">link</a> כדי לעדכן את הסיסמה שלך `
+            English: `<p>You requested for reset password, kindly use this <a href="${process.env.FRONTEND_URI}/reset-password?token='${token}'">link</a> to reset your password</p>`,
+            Hebrew: `<p>ביקשת לשנות את הסיסמה שלך, ניתן להשתמש בקישור הבא: <a href="${process.env.FRONTEND_URI}/reset-password?token='${token}'">לחץ כאן כדי לעדכן את הסיסמה שלך</a>`
         }
         const subjects = {
             English: "Did you forget your password?",
@@ -154,8 +158,8 @@ export class UsersService {
     async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
         Logger.log(`UsersService->forgotPassword() entered with: ${Utils.toString(forgotPasswordDto)}`);
         const { email, language } = forgotPasswordDto;
-        const isEmailFound = await this.userModel.findOne({ email });
-        if (!isEmailFound) {
+        let emailObject = await this.userModel.findOne({ email });
+        if (!emailObject) {
             Logger.warn(`UsersService->forgotPassword() email is not found`);
             throw new NotFoundException(`Email isn't found of reset password`);
         }
@@ -169,8 +173,53 @@ export class UsersService {
         }
 
         const isSent = await this.mailService.sendEmail(emailOptions);
+        emailObject.resetToken = token;
+        await emailObject.save();
         Logger.log(`UsersService->forgotPassword() got ${Utils.toString(isSent)}`);
         return isSent;
+    }
+
+    async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<boolean> {
+        Logger.log(`UsersService->resetPassword() entered with: ${Utils.toString(resetPasswordDto)}`);
+        const { password, resetToken } = resetPasswordDto;
+        let userObject = await this.userModel.findOne({ resetToken });
+        if (!userObject) {
+            Logger.warn(`UsersService->resetPassword() resetToken not found`);
+            throw new NotFoundException("Reset Token isn't found");
+        }
+        userObject.password = await bcrypt.hash(password, BCRYPT_ROUNDS);
+        await userObject.save();
+        return true;
+
+    }
+
+    async defineToken(accessTokenDto: AccessTokenDto): Promise<AccessTokenResponse> {
+        Logger.log(`UsersService->defineToken() entered with: ${Utils.toString(accessTokenDto)}`);
+        const { accessToken } = accessTokenDto;
+        try {
+            const secret = await this.privateKey.getPrivateKey();
+            const payload: { accessLayer: AccessLayer } = await this.jwtService.verifyAsync(accessToken, { secret });
+            if (!payload) {
+                Logger.warn(`UsersService->defineToken() got error`);
+                return {
+                    isAdmin: false,
+                    isRegularUser: false
+                }
+            }
+            const { accessLayer } = payload;
+            return {
+                isAdmin: accessLayer === AccessLayer.SUPER_ADMIN || accessLayer === AccessLayer.ADMIN,
+                isRegularUser: accessLayer !== AccessLayer.VISITOR
+            }
+
+
+        } catch (error) {
+            Logger.warn(`UsersService->defineToken() got: ${Utils.toString(error)}`);
+            return {
+                isAdmin: false,
+                isRegularUser: false
+            }
+        }
     }
 
     async banUser(userId: Types.ObjectId) {

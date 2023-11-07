@@ -13,6 +13,10 @@ import { UserUpdateDto } from 'src/dto/request/users/userUpdate.dto';
 import { Types } from 'mongoose';
 import { UserAvailablityDto } from 'src/dto/request/users/changeUserAvailablity.dto';
 import { ForgotPasswordDto } from 'src/dto/request/users/forgotPassword.dto';
+import { RegisterResponse } from 'src/dto/response/register.response';
+import { LoginResponse } from 'src/dto/response/login.response';
+import { ResetPasswordDto } from 'src/dto/request/users/resetPassword.dto';
+import { AccessTokenDto } from 'src/dto/request/users/accessToken.dto';
 
 
 @Controller('users')
@@ -22,22 +26,20 @@ export class UsersController {
 
     @Post('/register')
     @UsePipes(ValidationPipe)
-    async register(@Body() user: UserDto, @Res({ passthrough: true }) response: Response): Promise<string> {
+    async register(@Body() user: UserDto): Promise<RegisterResponse> {
         Logger.log(`UsersController->register() entered with: ${Utils.toString(user)}`);
-        const { message, accessToken } = await this.userService.createUser(user);
-        Logger.log(`UsersController->register() got message: ${message}, token: ${accessToken}`);
-        response.header("Authorization", `Bearer ${accessToken}`);
-        return message;
+        const result = await this.userService.createUser(user);
+        Logger.log(`UsersController->register() got ${Utils.toString(result)}`);
+        return result;
     }
 
     @Post('/login')
     @UsePipes(ValidationPipe)
-    async login(@Body() userlogin: LoginDto, @Res({ passthrough: true }) response: Response): Promise<string> {
+    async login(@Body() userlogin: LoginDto): Promise<LoginResponse> {
         Logger.log(`UsersController->register() entered with: ${Utils.toString(userlogin)}`);
-        const { message, accessToken } = await this.userService.userLogin(userlogin);
-        Logger.log(`UsersController->register() got message: ${message}, token: ${accessToken}`);
-        response.header("Authorization", `Bearer ${accessToken}`);
-        return message;
+        const result = await this.userService.userLogin(userlogin);
+        Logger.log(`UsersController->register() got ${Utils.toString(result)}`);
+        return result;
     }
 
     @Get()
@@ -96,9 +98,21 @@ export class UsersController {
 
     }
 
+    @Post('/define-token')
+    @UsePipes(ValidationPipe)
+    async defineToken(accessTokenDto: AccessTokenDto) {
+        return await this.userService.defineToken(accessTokenDto);
+    }
+
     @Put('/forgot-password')
     @UsePipes(ValidationPipe)
-    async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto){
+    async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
         return await this.userService.forgotPassword(forgotPasswordDto);
+    }
+
+    @Put('/reset-password')
+    @UsePipes(ValidationPipe)
+    async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+        return await this.userService.resetPassword(resetPasswordDto);
     }
 }
