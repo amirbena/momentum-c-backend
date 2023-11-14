@@ -17,6 +17,7 @@ import { RegisterResponse } from 'src/dto/response/register.response';
 import { LoginResponse } from 'src/dto/response/login.response';
 import { ResetPasswordDto } from 'src/dto/request/users/resetPassword.dto';
 import { AccessTokenDto } from 'src/dto/request/users/accessToken.dto';
+import { TokenDto } from 'src/dto/request/users/tokenDto.dto';
 
 
 @Controller('users')
@@ -42,11 +43,18 @@ export class UsersController {
         return result;
     }
 
+    @Post('/logout')
+    @UseGuards(AuthGuard)
+    @UsePipes(ValidationPipe)
+    async logout(@Body() user: TokenDto) {
+        return await this.userService.logout(user);
+    }
+
     @Get()
     @UseGuards(AuthGuard)
-    async getAllUsers(): Promise<UserDocument[]> {
+    async getAllUsers(@Body() user: TokenDto): Promise<UserDocument[]> {
         Logger.log(`UsersController->getAllUsers() entered`);
-        const results = await this.userService.getAllUsers();
+        const results = await this.userService.getAllUsers(user);
         return results;
     }
 

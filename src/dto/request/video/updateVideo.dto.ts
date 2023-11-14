@@ -3,6 +3,7 @@ import { IsObjectId } from "class-validator-mongo-object-id";
 import { Types } from "mongoose";
 import { AccessLayer, MAX_NAME_LENGTH, VideoSection } from "src/constants/constants";
 import { Type } from "class-transformer";
+import { TokenDto } from "../users/tokenDto.dto";
 
 export class UpdateVideoDto {
 
@@ -32,4 +33,7 @@ export class UpdateVideoDto {
     @IsOptional()
     @IsUrl()
     link?: string;
+
+    @IsNotEmpty()
+    user: TokenDto;
 }

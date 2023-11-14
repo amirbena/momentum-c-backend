@@ -1,6 +1,7 @@
 import { ArrayMinSize, IsArray, IsEnum, IsNotEmpty, IsUrl, MaxLength } from "class-validator";
 import { AccessLayer, MAX_NAME_LENGTH, VideoSection } from "src/constants/constants";
 import { IsAccessLayerArray } from "src/decorators/isAccessLayerArray.decorator";
+import { TokenDto } from "../users/tokenDto.dto";
 
 
 
@@ -28,4 +29,7 @@ export class CreateVideoDto {
     @IsNotEmpty()
     @IsUrl()
     link: string;
+
+    @IsNotEmpty()
+    user: TokenDto;
 }

@@ -10,7 +10,8 @@ import { MailService } from 'src/mail/mail.service';
 @Module({
   imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
   controllers: [UsersController],
-  providers: [PrivateKey, UsersService, JwtService, MailService]
+  providers: [PrivateKey, UsersService, JwtService, MailService],
+  exports: [UsersService]
 })
 export class UsersModule {
 }
