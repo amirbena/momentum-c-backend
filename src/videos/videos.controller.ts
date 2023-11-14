@@ -26,6 +26,7 @@ export class VideosController {
     }
 
     @Post('/videos-by-access-layer')
+    @UseGuards(AuthGuard)
     @UsePipes(ValidationPipe)
     async videosByAccessLayer(@Body() videosBySection: VideosBySection) {
         Logger.log(`VideosController->videosByAccessLayer() entered with: ${Utils.toString(videosBySection)}`);

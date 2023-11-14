@@ -2,6 +2,7 @@ import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsUUID, Matches, MaxLength } f
 import { Types } from "mongoose";
 import { AccessLayer, ISRAELI_PHONE_REGEX, MAX_EMAIL_LENGTH, MAX_NAME_LENGTH, MAX_PHONE_LENGTH, PASSWORD_LENGTH } from "src/constants/constants";
 import { IsObjectId } from 'class-validator-mongo-object-id';
+import { TokenDto } from "./tokenDto.dto";
 export class UserUpdateDto {
 
     @IsNotEmpty()
@@ -30,4 +31,7 @@ export class UserUpdateDto {
     @IsOptional()
     @IsEnum(AccessLayer)
     accessLayer?: AccessLayer;
+
+    @IsNotEmpty()
+    user: TokenDto;
 }

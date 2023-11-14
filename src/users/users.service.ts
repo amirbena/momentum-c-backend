@@ -21,6 +21,7 @@ import { RegisterResponse } from 'src/dto/response/register.response';
 import { ResetPasswordDto } from 'src/dto/request/users/resetPassword.dto';
 import { AccessTokenDto } from 'src/dto/request/users/accessToken.dto';
 import { AccessTokenResponse } from 'src/dto/response/accessToken.response';
+import { TokenDto } from 'src/dto/request/users/tokenDto.dto';
 
 
 @Injectable()
@@ -39,7 +40,8 @@ export class UsersService {
             const user: User = {
                 ...userdto,
                 password,
-                accessLayer: AccessLayer.VISITOR
+                accessLayer: AccessLayer.VISITOR,
+                lastTimeOfLogin: new Date()
             }
             const userItem = new this.userModel(user);
             const savedItem = await userItem.save();
@@ -78,6 +80,8 @@ export class UsersService {
         try {
             Logger.log(`UsersService->userLogin() login successfully`);
             const { email, accessLayer, fullName } = userWithEmail;
+            userWithEmail.lastTimeOfLogin = new Date();
+            await userWithEmail.save();
             const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: await this.privateKey.getPrivateKey(), expiresIn: TIME.HOUR });
             Logger.log(`UsersService->userLogin() got token: ${token}`);
             return { message: LOGIN_REGISTER_MESSAGE, accessToken: token };
@@ -87,17 +91,35 @@ export class UsersService {
         }
     }
 
-    async getAllUsers(): Promise<UserDocument[]> {
+    async getAllUsers(tokenDto: TokenDto): Promise<UserDocument[]> {
         Logger.log(`UsersService->getAllUsers() entered`);
         const results: UserDocument[] = await this.userModel.find();
+        await this.updateUserDto(tokenDto);
         Logger.log(`UsersService->getAllUsers() got: ${Utils.toString(results)}`);
         return results;
+    }
+
+    async updateUserDto(tokenDto: TokenDto): Promise<void> {
+        const findUser = await this.userModel.findOne({ fullName: tokenDto.fullName });
+        if (!findUser) {
+            Logger.warn(`UsersService->updateUserDto() user is not found`);
+            throw new NotFoundException("NOT FOUND");
+        }
+        findUser.lastTimeOfMakingAction = new Date();
+        findUser.timeUsingApplication += Math.floor((findUser.lastTimeOfMakingAction.getTime() - findUser.lastTimeOfLogin.getTime()) / 1000);
+        await findUser.save();
+    }
+
+    async logout(tokenDto: TokenDto): Promise<string> {
+        Logger.log(`UsersService->logout() entered with: ${Utils.toString(tokenDto)}`);
+        await this.updateUserDto(tokenDto);
+        return "Success";
     }
 
 
     async changeUserDetails(userUpdateDto: UserUpdateDto): Promise<UserDocument> {
         Logger.log(`UsersService->changeUserDetails() entered with: ${Utils.toString(userUpdateDto)}`);
-        const { id, password } = userUpdateDto;
+        const { id, password, user: tokenDto } = userUpdateDto;
         if (password) {
             Logger.log(`UsersService->changeUserDetails() password need to be hashed`);
             userUpdateDto.password = await bcrypt.hash(password, BCRYPT_ROUNDS);
@@ -108,13 +130,12 @@ export class UsersService {
             throw new NotFoundException("Can't find id");
         }
         Object.entries(userUpdateDto).forEach(([key, value]) => {
-            if (value) {
+            if (key != "user" && value) {
                 updatedItem[key] = value;
             }
         });
+        await this.updateUserDto(tokenDto);
         return updatedItem;
-
-
     }
 
     async deleteUser(id: Types.ObjectId) {
@@ -124,19 +145,19 @@ export class UsersService {
             Logger.warn(`UsersService->changeUserDetails() not item deleted, item not found`)
             throw new NotFoundException("Can't find id");
         }
-
         return id;
     }
 
     async changeUserAvaialblity(userAvailablityDto: UserAvailablityDto): Promise<UserDocument> {
         Logger.log(`UsersService->changeUserAvaialblity() entered with: ${Utils.toString(userAvailablityDto)}`);
-        const { id, isBanned } = userAvailablityDto;
+        const { id, isBanned, user } = userAvailablityDto;
         let updatedItem = await this.userModel.findByIdAndUpdate(id, { isBanned });
         if (!updatedItem) {
             Logger.warn(`UsersService->changeUserAvaialblity() can't found id, can't update`);
             throw new NotFoundException("Can't find id");
         }
         updatedItem.isBannedTemporary = isBanned;
+        await this.updateUserDto(user);
         return updatedItem;
     }
 

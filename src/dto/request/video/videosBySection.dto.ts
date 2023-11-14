@@ -1,5 +1,6 @@
 import { IsEnum, IsNotEmpty, IsOptional } from "class-validator";
 import { AccessLayer, VideoSection } from "src/constants/constants";
+import { TokenDto } from "../users/tokenDto.dto";
 
 export class VideosBySection {
 
@@ -7,8 +8,7 @@ export class VideosBySection {
     @IsEnum(VideoSection)
     section: VideoSection;
 
-    @IsOptional()
-    @IsEnum(AccessLayer)
-    accessLayer: AccessLayer = AccessLayer.VISITOR;
+    @IsNotEmpty()
+    user: TokenDto;
 
 }
