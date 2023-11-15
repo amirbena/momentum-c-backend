@@ -18,6 +18,7 @@ import { LoginResponse } from 'src/dto/response/login.response';
 import { ResetPasswordDto } from 'src/dto/request/users/resetPassword.dto';
 import { AccessTokenDto } from 'src/dto/request/users/accessToken.dto';
 import { TokenDto } from 'src/dto/request/users/tokenDto.dto';
+import { IsSamePasswordDto } from 'src/dto/request/users/isSamePassword.dto';
 
 
 @Controller('users')
@@ -108,8 +109,15 @@ export class UsersController {
 
     @Post('/define-token')
     @UsePipes(ValidationPipe)
-    async defineToken(accessTokenDto: AccessTokenDto) {
+    async defineToken(@Body() accessTokenDto: AccessTokenDto) {
         return await this.userService.defineToken(accessTokenDto);
+    }
+
+    @Post('/is-same-password')
+    @UseGuards(AuthGuard)
+    @UsePipes(ValidationPipe)
+    async isSamePassword(@Body() isSamePassword: IsSamePasswordDto) {
+        return await this.userService.isSamePassword(isSamePassword);
     }
 
     @Put('/forgot-password')

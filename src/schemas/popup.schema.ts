@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { MAX_NAME_LENGTH, } from 'src/constants/constants';
-import { User } from './user.schema';
+import { AccessLayer, MAX_NAME_LENGTH, } from 'src/constants/constants';
 
 export type PopupDocument = HydratedDocument<Popup>;
 
@@ -9,17 +8,26 @@ export type PopupDocument = HydratedDocument<Popup>;
 export class Popup {
 
     @Prop({ required: true, maxlength: MAX_NAME_LENGTH })
-    headline: string;
+    title: string;
 
     @Prop({ required: true, maxlength: MAX_NAME_LENGTH })
     description: string;
 
+    @Prop({ required: true, type: Array, default: [AccessLayer.VISITOR] })
+    accessLayers: AccessLayer[];
+
+    @Prop({ required: true })
+    link: string;
+
     @Prop({ required: true, type: Date })
     creationDate: Date = new Date();
 
-    @Prop({ required: true, type: Date })
-    scheudlingDate: Date;
-    
+    @Prop({ required: false, type: Date })
+    scheudlingDate?: Date;
+
+    @Prop({ required: false, type: Array })
+    userReadIds: Types.ObjectId[];
+
 }
 
 export const PopupSchema = SchemaFactory.createForClass(Popup);

@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrivateKey } from 'src/private-keys/private-keys';
 import { UserDto } from 'src/dto/request/users/user.dto';
 import * as bcrypt from 'bcrypt';
-import { AccessLayer, BCRYPT_ROUNDS, TIME, LOGIN_REGISTER_MESSAGE, EMAIL_ID, RAND_TOKEN_SIZE } from 'src/constants/constants';
+import { AccessLayer, BCRYPT_ROUNDS, TIME, LOGIN_REGISTER_MESSAGE, MOMENTUM_MAIL_EMAIL, RAND_TOKEN_SIZE } from 'src/constants/constants';
 import { LoginDto } from 'src/dto/request/users/login.dto';
 import { Utils } from 'src/utils/Utils';
 import { LoginResponse } from 'src/dto/response/login.response';
@@ -22,6 +22,7 @@ import { ResetPasswordDto } from 'src/dto/request/users/resetPassword.dto';
 import { AccessTokenDto } from 'src/dto/request/users/accessToken.dto';
 import { AccessTokenResponse } from 'src/dto/response/accessToken.response';
 import { TokenDto } from 'src/dto/request/users/tokenDto.dto';
+import { IsSamePasswordDto } from 'src/dto/request/users/isSamePassword.dto';
 
 
 @Injectable()
@@ -46,7 +47,7 @@ export class UsersService {
             const userItem = new this.userModel(user);
             const savedItem = await userItem.save();
             Logger.log(`UsersService->createUser() user registered successfully`);
-            const { email, accessLayer, fullName } = savedItem;
+            const { email, accessLayer, fullName }: TokenDto = savedItem;
             const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: await this.privateKey.getPrivateKey(), expiresIn: TIME.HOUR });
             Logger.log(`UsersService->createUser() got token: ${token}`);
             return { message: LOGIN_REGISTER_MESSAGE, accessToken: token };
@@ -54,12 +55,18 @@ export class UsersService {
             Logger.error(`UsersService->createUser() has error occured: ${Utils.toString(error)}`);
             throw new InternalServerErrorException("Something got wrong- can't continue");
         }
+    }
 
-
+    async getIdByFullName(fullName: string): Promise<string | Types.ObjectId> {
+        Logger.log(`UsersService->getIdByFullName() entered with: ${fullName}`)
+        const foundUser = await this.userModel.findOne({ fullName });
+        if (!foundUser) {
+            return "";
+        }
+        return foundUser._id;
     }
 
     async userLogin(loginDto: LoginDto): Promise<LoginResponse> {
-        console.log("fs", fs);
         Logger.log(`UsersService->userLogin() entered with: ${Utils.toString(loginDto)}`);
         const { email, password } = loginDto;
         const userWithEmail = await this.userModel.findOne({ email });
@@ -187,7 +194,7 @@ export class UsersService {
         const token = generate(RAND_TOKEN_SIZE);
         const { subject, html } = this.createForgotPasswordUrlWithToken(token, language);
         const emailOptions: EmailOptions = {
-            from: EMAIL_ID,
+            from: MOMENTUM_MAIL_EMAIL,
             to: email,
             subject,
             html
@@ -241,6 +248,27 @@ export class UsersService {
                 isRegularUser: false
             }
         }
+    }
+
+
+    async isSamePassword(isSamePasswordDto: IsSamePasswordDto): Promise<boolean> {
+        Logger.log(`UsersService->isSamePassword() entered with: ${Utils.toString(isSamePasswordDto)}`);
+        const { user: { fullName, ...rest }, password } = isSamePasswordDto;
+        try {
+            const findUser = await this.userModel.findOne({ fullName });
+            if (!findUser) {
+                Logger.warn(`UsersService->isSamePassword() password isn't same`);
+                return false;
+            }
+            const result = await bcrypt.compare(password, findUser.password);
+            Logger.log(`UsersService->isSamePassword() is Passwords same: ${Utils.toString(result)}`);
+            await this.updateUserDto({ fullName, ...rest });
+            return result;
+        } catch (error) {
+            Logger.error(`UsersService->isSamePassword() an error occured: ${Utils.toString(error.message)}`);
+            return false;
+        }
+
     }
 
     async banUser(userId: Types.ObjectId) {

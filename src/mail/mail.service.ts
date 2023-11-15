@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Transporter, createTransport } from 'nodemailer';
-import { EMAIL_ID, EMAIL_PASSWORD, GMAIL_ACCESS_TOKEN, GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN, REDIRECT_URI } from 'src/constants/constants';
+import { MOMENTUM_MAIL_EMAIL, MOMENTUM_MAIL_PASSWORD, MOMENTUM_GMAIL_ACCESS_TOKEN, MOMENTUM_GMAIL_CLIENT_ID, MOMENTUM_GMAIL_CLIENT_SECRET, MOMENTUM_GMAIL_REFRESH_TOKEN, REDIRECT_URI } from 'src/constants/constants';
 import { EmailOptions } from './mailOptions.model';
 import { Utils } from 'src/utils/Utils';
 import { google } from 'googleapis';
@@ -12,14 +12,14 @@ export class MailService {
 
     constructor() { 
         const oauth2Client = new google.auth.OAuth2(
-            GMAIL_CLIENT_ID,
-            GMAIL_CLIENT_SECRET,
+            MOMENTUM_GMAIL_CLIENT_ID,
+            MOMENTUM_GMAIL_CLIENT_SECRET,
             REDIRECT_URI
           );
           
           // Generate an access token and refresh token
-          const accessToken = GMAIL_ACCESS_TOKEN;
-          const refreshToken = GMAIL_REFRESH_TOKEN;
+          const accessToken = MOMENTUM_GMAIL_ACCESS_TOKEN;
+          const refreshToken = MOMENTUM_GMAIL_REFRESH_TOKEN;
           
           // Set the OAuth2 client credentials
           oauth2Client.setCredentials({
@@ -32,9 +32,9 @@ export class MailService {
             service: 'Gmail',
             auth: {
               type: 'OAuth2',
-              user: EMAIL_ID,
-              clientId: GMAIL_CLIENT_ID,
-              clientSecret: GMAIL_CLIENT_SECRET,
+              user: MOMENTUM_MAIL_EMAIL,
+              clientId: MOMENTUM_GMAIL_CLIENT_ID,
+              clientSecret: MOMENTUM_GMAIL_CLIENT_SECRET,
               refreshToken: refreshToken,
               accessToken: accessToken,
             },

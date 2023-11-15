@@ -48,12 +48,15 @@ export enum VideoSection {
     General = "general"
 }
 
-export const EMAIL_ID = "amir12061968@gmail.com";
-export const EMAIL_PASSWORD = "18365582";
+export enum PopupCreation {
+    REGULAR_POPUP = "Successed to create regular popup",
+    SCHEDUALING_POPUP = "Successed to create scheduling popup"
+}
 
 
-export const GMAIL_CLIENT_ID = "554094100325-ukgn69ol9lk3s2uf2g8ojre5r6e48g97.apps.googleusercontent.com";
-export const GMAIL_CLIENT_SECRET = "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";
-export const REDIRECT_URI= "https://developers.google.com/oauthplayground";
-export const GMAIL_REFRESH_TOKEN = "1//043sM-I3Pc9ckCgYIARAAGAQSNwF-L9IrP8ojlCCsczyPL_UjwyFOpg04newFjWkcDY7PgcHawkn1MXfTk5tUzhRlM0tHM2-a0ds";
-export const GMAIL_ACCESS_TOKEN = "ya29.a0AfB_byCMEVIVzlwbkrQaIVxdI42aBc-qhseCN5YPGOSuJOnzKWRM7l6g4iTWxA6Z18Rq4PDrWH7YT7Nf-FgzvVuCqQqPfprEqwHOSxtKyf_sj5Sos-axbJH84PZtgmXOHzE0Q-wDdjr-arLuijbnmeBdeFOjRlY5H58saCgYKAVISARMSFQGOcNnCK_oL2UEM9XRFEDWBtP5Ucg0171";
+
+export const MOMENTUM_GMAIL_CLIENT_ID = "554094100325-ukgn69ol9lk3s2uf2g8ojre5r6e48g97.apps.googleusercontent.com";
+export const MOMENTUM_GMAIL_CLIENT_SECRET = "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";
+export const REDIRECT_URI = "https://developers.google.com/oauthplayground";
+export const MOMENTUM_GMAIL_REFRESH_TOKEN = "1//043sM-I3Pc9ckCgYIARAAGAQSNwF-L9IrP8ojlCCsczyPL_UjwyFOpg04newFjWkcDY7PgcHawkn1MXfTk5tUzhRlM0tHM2-a0ds";
+export const MOMENTUM_GMAIL_ACCESS_TOKEN = "ya29.a0AfB_byCMEVIVzlwbkrQaIVxdI42aBc-qhseCN5YPGOSuJOnzKWRM7l6g4iTWxA6Z18Rq4PDrWH7YT7Nf-FgzvVuCqQqPfprEqwHOSxtKyf_sj5Sos-axbJH84PZtgmXOHzE0Q-wDdjr-arLuijbnmeBdeFOjRlY5H58saCgYKAVISARMSFQGOcNnCK_oL2UEM9XRFEDWBtP5Ucg0171";
