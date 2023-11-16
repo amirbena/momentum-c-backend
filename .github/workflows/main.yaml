@@ -24,12 +24,15 @@ jobs:
       - name: Install Dependencies
         run: npm install --force
 
+    
       - name: Deploy to Elastic Beanstalk
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-north-1
-      - run: eb init
-      - run: eb create your-environment-name --cname momentumc-backend --region eu-north-1
-      - run: eb deploy your-environment-name --region eu-north-1
+        run: |
+          eb create momentumc-backend-env \
+            --cname momentumc-backend \
+            --region eu-north-1 \
+            --verbose
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        
+      - run: eb deploy momentumc-backend-env --region eu-north-1
