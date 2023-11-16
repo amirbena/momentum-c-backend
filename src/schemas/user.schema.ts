@@ -23,7 +23,34 @@ export class User {
     accessLayer: AccessLayer;
 
     @Prop({ required: true, default: false })
-    isBanned?: boolean;
+    isBannedTemporary?: boolean = false;
+
+    @Prop({ required: true, default: false })
+    isForverBanned?: boolean = false;
+
+    @Prop({ required: false, default: '' })
+    resetToken?: string = "";
+
+    @Prop({ required: false, default: 0 })
+    totalIncome?: number = 0;
+
+    @Prop({ required: false, default: 0 })
+    dailyIncome?: number = 0;
+
+    @Prop({ required: false, default: [] })
+    allIncomes?: number[] = [];
+
+    @Prop({ required: false, default: 0 })
+    timeUsingApplication?: number = 0;
+
+    @Prop({ required: false })
+    lastTimeOfLogin?: Date;
+
+    @Prop({ required: false })
+    lastTimeOfMakingAction?: Date;
+
+    @Prop({ required: false, default: '' })
+    driveLink?: string = "";
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

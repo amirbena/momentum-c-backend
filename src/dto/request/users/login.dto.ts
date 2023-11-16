@@ -3,8 +3,6 @@ import { MAX_EMAIL_LENGTH, PASSWORD_LENGTH } from "src/constants/constants";
 
 export class LoginDto {
 
-  
-
     @IsNotEmpty()
     @MaxLength(MAX_EMAIL_LENGTH)
     @IsEmail()
