@@ -7,6 +7,8 @@ import { AccessLayer } from 'src/constants/constants';
 import { CreateRegularPopup } from 'src/dto/request/popup/createRegularPopup.dto';
 import { RetreivePopups } from 'src/dto/request/popup/getPopupsToUser.dto';
 import { UpdatePopupDto } from 'src/dto/request/popup/updatePopup.dto';
+import { TokenDto } from 'src/dto/request/users/tokenDto.dto';
+import { PopupDocument } from 'src/schemas/popup.schema';
 
 @Controller('popup')
 export class PopupController {
@@ -32,8 +34,15 @@ export class PopupController {
     @Post()
     @UseGuards(AuthGuard)
     @UsePipes(ValidationPipe)
-    async getAllPopups(@Body() retreivePopups: RetreivePopups) {
+    async getAllPopups(@Body() retreivePopups: RetreivePopups): Promise<PopupDocument[]> {
         return await this.popupService.showPopupsAccordingUser(retreivePopups);
+    }
+
+    @Post('/read-popups')
+    @UseGuards(AuthGuard)
+    @UsePipes(ValidationPipe)
+    async getAllReadPopup(@Body() tokenDto: TokenDto):Promise<PopupDocument[]> {
+        return await this.popupService.showAllMessagesInHistory(tokenDto);
     }
 
     @Put()

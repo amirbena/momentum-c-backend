@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { YOUTUBE, YOUTUBE_EMBDED_LINK } from 'src/constants/constants';
 import { CreateVideoDto } from 'src/dto/request/video/createVideo.dto';
 import { UpdateVideoDto } from 'src/dto/request/video/updateVideo.dto';
 import { VideosBySection } from 'src/dto/request/video/videosBySection.dto';
@@ -16,12 +17,21 @@ export class VideosService {
     constructor(@InjectModel(Video.name) private videoModel: Model<Video>, private usersService: UsersService) { }
 
 
+    private convertLinkToEmbedLink(link: string) {
+        const [first, linkId] = link.split('=');
+        if (first.includes(YOUTUBE)) {
+            return `${YOUTUBE_EMBDED_LINK}/${linkId}`;
+        }
+        return link;
+    }
+
     async createVideo(createVideoDto: CreateVideoDto): Promise<VideoDocument> {
         Logger.log(`VideosService->createVideo() entered with: ${Utils.toString(createVideoDto)}`);
-        const { user, ...rest } = createVideoDto
+        const { user, link, ...rest } = createVideoDto;
 
         const video: Video = {
-            ...rest
+            ...rest,
+            link: this.convertLinkToEmbedLink(link)
         }
         const videoDoc = new this.videoModel(video);
         await videoDoc.save();

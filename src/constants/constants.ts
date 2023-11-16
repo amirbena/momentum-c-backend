@@ -18,6 +18,9 @@ export const FOLDER_MEDIA_TYPE_DRIVE = "application/vnd.google-apps.folder";
 
 export const LOGIN_REGISTER_MESSAGE = "Successed to entrance to web";
 
+export const YOUTUBE = "youtube";
+export const YOUTUBE_EMBDED_LINK = "https://www.youtube.com/embed";
+
 
 export const SHEETS_CONTANT = '1EPH9vTeakgHbSsWmOpjJ3JlG4RB00fDdG1CheZRR_ds';
 
@@ -55,8 +58,9 @@ export enum PopupCreation {
 
 
 
+
 export const MOMENTUM_GMAIL_CLIENT_ID = "554094100325-ukgn69ol9lk3s2uf2g8ojre5r6e48g97.apps.googleusercontent.com";
 export const MOMENTUM_GMAIL_CLIENT_SECRET = "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";
 export const REDIRECT_URI = "https://developers.google.com/oauthplayground";
-export const MOMENTUM_GMAIL_REFRESH_TOKEN = "1//043sM-I3Pc9ckCgYIARAAGAQSNwF-L9IrP8ojlCCsczyPL_UjwyFOpg04newFjWkcDY7PgcHawkn1MXfTk5tUzhRlM0tHM2-a0ds";
-export const MOMENTUM_GMAIL_ACCESS_TOKEN = "ya29.a0AfB_byCMEVIVzlwbkrQaIVxdI42aBc-qhseCN5YPGOSuJOnzKWRM7l6g4iTWxA6Z18Rq4PDrWH7YT7Nf-FgzvVuCqQqPfprEqwHOSxtKyf_sj5Sos-axbJH84PZtgmXOHzE0Q-wDdjr-arLuijbnmeBdeFOjRlY5H58saCgYKAVISARMSFQGOcNnCK_oL2UEM9XRFEDWBtP5Ucg0171";
+export const MOMENTUM_GMAIL_REFRESH_TOKEN = "1//04dVOGKwOGS0tCgYIARAAGAQSNwF-L9IrBZJwmNfU3D_qkTG3krDyzWkLoxn3iWxGs1NRHZLGxdBB4pttdlSEmC9XqneuNx_U87s";
+export const MOMENTUM_GMAIL_ACCESS_TOKEN = "ya29.a0AfB_byDKsXbqsijK5mNSj9OjgUrHHdMktivYRbSfJ9YoKtagrkEYgQvxpecGtSMDARDOyFXSZbCBdOUlQ91JQFoF3ChDhUiWCSCW1hvbKSKGjsWqTGXp9V2R79puBhu5c7Dkcoi8ImpnDN9nJwv-cbNKtc9e_okeOhEKaCgYKAQ0SARMSFQHGX2MiGDOo1y4Is8XlMqqHXOkdnA0171";
