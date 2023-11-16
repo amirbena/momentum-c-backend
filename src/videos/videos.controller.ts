@@ -9,6 +9,7 @@ import { Utils } from 'src/utils/Utils';
 import { VideosBySection } from 'src/dto/request/video/videosBySection.dto';
 import { UpdateVideoDto } from 'src/dto/request/video/updateVideo.dto';
 import { Types } from 'mongoose';
+import { VideoDocument } from 'src/schemas/videos.schema';
 
 @Controller('videos')
 export class VideosController {
@@ -28,7 +29,7 @@ export class VideosController {
     @Post('/videos-by-access-layer')
     @UseGuards(AuthGuard)
     @UsePipes(ValidationPipe)
-    async videosByAccessLayer(@Body() videosBySection: VideosBySection) {
+    async videosByAccessLayer(@Body() videosBySection: VideosBySection): Promise<VideoDocument[]> {
         Logger.log(`VideosController->videosByAccessLayer() entered with: ${Utils.toString(videosBySection)}`);
         const videos = await this.videosService.getVideosBySection(videosBySection);
         Logger.log(`VideosController->videosByAccessLayer() got: ${Utils.toString(videos)}`);

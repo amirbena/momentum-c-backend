@@ -9,9 +9,5 @@ export class UpdatePopupDto {
     popupId: Types.ObjectId;
 
     @IsNotEmpty()
-    @IsObjectId()
-    userId: Types.ObjectId;
-
-    @IsNotEmpty()
     user: TokenDto;
 }
