@@ -11,6 +11,16 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @Get()
+  getInfo(): string {
+    return "Hello";
+  }
+
+  @Get() 
+  getHealth(): string{
+     return "Health";
+  }
+
 
   @Post('/uploadFolder')
   async createFolder(@Body() check: Record<any, string>) {
