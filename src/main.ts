@@ -6,14 +6,10 @@ import * as awsServerlessExpress from 'aws-serverless-express';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import * as https from 'https';
-import * as cors from 'cors';
 import helmet from 'helmet';
 
-const server = express();
-const expressAdapter = new ExpressAdapter(server);
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, expressAdapter);
 
 
   if (process.env.NODE_ENV == "local") {
@@ -24,31 +20,24 @@ async function bootstrap() {
     return await app.listen(parseInt(process.env.PORT));
   }
 
-  const httpsOptions = {
+  const httpsOptions: https.AgentOptions = {
     key: readFileSync(resolve(process.cwd(), "src", 'crypto/key.pem')),
     cert: readFileSync(resolve(process.cwd(), "src", 'crypto/cert.pem')),
   };
 
-  server.use(helmet());
+  const app = await NestFactory.create(AppModule, { httpsOptions });
+  app.use(helmet());
   const origin = [process.env.FRONTEND_URI];
+  
   if (process.env.CHECK_URI) {
     origin.push(process.env.CHECK_URI);
   }
-  server.use(cors({
+  
+  app.enableCors({
     origin
-  }))
+  })
 
-  server.use('*', (req, res) => {
-    return app.getHttpAdapter().getInstance()(req, res);
-  });
-
-  server.use('/info', (req, res) => res.send("Hello"));
-  server.use('/health', (req, res) => res.send("hello"));
-
-
-
-  https.createServer(httpsOptions, server).listen(process.env.PORT || 3000, () => {
-    console.log(`NestJS application listening on port ${process.env.PORT || 3000}`);
-  });
+  console.log(process.env.PORT);
+  await app.listen(parseInt(process.env.PORT || "8080"));
 }
 bootstrap();
