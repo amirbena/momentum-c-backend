@@ -31,8 +31,8 @@ async function bootstrap() {
 
   server.use(helmet());
   const origin = [process.env.FRONTEND_URI];
-  if(process.env.CHECK_URI){
-      origin.push(process.env.CHECK_URI);    
+  if (process.env.CHECK_URI) {
+    origin.push(process.env.CHECK_URI);
   }
   server.use(cors({
     origin
@@ -42,7 +42,10 @@ async function bootstrap() {
     return app.getHttpAdapter().getInstance()(req, res);
   });
 
- 
+  server.use('/info', (req, res) => res.send("Hello"));
+  server.use('/health', (req, res) => res.send("hello"));
+
+
 
   https.createServer(httpsOptions, server).listen(process.env.PORT || 3000, () => {
     console.log(`NestJS application listening on port ${process.env.PORT || 3000}`);
