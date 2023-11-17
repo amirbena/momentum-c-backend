@@ -30,8 +30,12 @@ async function bootstrap() {
   };
 
   server.use(helmet());
+  const origin = [process.env.FRONTEND_URI];
+  if(process.env.CHECK_URI){
+      origin.push(process.env.CHECK_URI);    
+  }
   server.use(cors({
-    origin: [process.env.FRONTEND_URI]
+    origin
   }))
 
   server.use('*', (req, res) => {
