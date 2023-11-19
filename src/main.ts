@@ -23,7 +23,7 @@ async function bootstrap() {
       ca: readFileSync(resolve(process.cwd(), 'src', 'crypto/cert')),
       key: readFileSync(resolve(process.cwd(), 'src', 'crypto/key'))
     }
-    app = await NestFactory.create(AppModule, { httpsOptions });
+    app = await NestFactory.create(AppModule);
     app.use(helmet());
 
 
