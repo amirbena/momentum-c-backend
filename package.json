@@ -12,7 +12,7 @@
     "start:dev": "nest start --watch",
     "start:local": "SET NODE_ENV=local&& nest start --watch",
     "start:development": "SET NODE_ENV=development&& nest start --watch",
-    "start:staging": "SET NODE_ENV=staging&& nest start --watch",
+    "start:staging": "SET NODE_ENV=production&& nest start --watch",
     "start:production": "SET NODE_ENV=production&& npm run build && npm run start:prod",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

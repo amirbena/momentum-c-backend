@@ -14,13 +14,15 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { VideosModule } from './videos/videos.module';
 import { PopupModule } from './popup/popup.module';
 
+
+
 @Module({
   imports: [ConfigModule.forRoot({ envFilePath: `src/environments/.${process.env.NODE_ENV}.env` }),
   RedisModule.forRoot({
     config: {
       host: process.env.REDIS_URI,
-      port: parseInt(process.env.REDIS_PORT)
-
+      port: parseInt(process.env.REDIS_PORT),
+      password: process.env.REDIS_SOCKET_PASSWORD
     }
   }), JwtModule.register({ signOptions: { expiresIn: TIME.DAY } }), MongooseModule.forRoot(`${process.env.MONGO_URI}`), UsersModule, NotificationsModule, VideosModule, PopupModule],
   controllers: [AppController],
