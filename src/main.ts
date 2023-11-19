@@ -25,10 +25,7 @@ async function bootstrap() {
       origin
     }) */
   }
-
   
-
-  console.log(process.env.PORT);
   await app.listen(parseInt(process.env.PORT || "8080"));
 }
 bootstrap();
