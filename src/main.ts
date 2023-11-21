@@ -3,10 +3,12 @@ import { AppModule } from './app.module';
 import helmet from 'helmet';
 import { readFileSync } from 'fs';
 import { AgentOptions } from 'https';
+import { GLOBAL_PREFIX } from './constants/constants';
 
 async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix(GLOBAL_PREFIX)
   const origin = [process.env.FRONTEND_URI];
   if (process.env.NODE_ENV == "local") {
     const app = await NestFactory.create(AppModule);

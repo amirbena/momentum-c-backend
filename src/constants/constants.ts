@@ -8,6 +8,9 @@ export const PASSWORD_LENGTH = 24;
 export const BCRYPT_ROUNDS = 10;
 
 
+export const GLOBAL_PREFIX= "backend";
+
+
 export const ISRAELI_PHONE_REGEX = /^(\+972|0)([23489]|5[012345689]|77)[1-9]\d{6}$/;
 
 
