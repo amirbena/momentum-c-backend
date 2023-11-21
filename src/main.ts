@@ -26,7 +26,7 @@ async function bootstrap() {
     console.log("origin", origin);
 
      app.enableCors({
-       origin
+       origin 
      })
   }
 
