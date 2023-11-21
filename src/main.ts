@@ -23,9 +23,7 @@ async function bootstrap() {
       origin.push(process.env.CHECK_URI);
     }
 
-     app.enableCors({
-       origin
-     })
+    console.log("origin", origin);
   }
 
   await app.listen(parseInt(process.env.PORT || "8080"));
