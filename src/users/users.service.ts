@@ -12,7 +12,6 @@ import { Utils } from 'src/utils/Utils';
 import { LoginResponse } from 'src/dto/response/login.response';
 import { UserUpdateDto } from 'src/dto/request/users/userUpdate.dto';
 import { UserAvailablityDto } from 'src/dto/request/users/changeUserAvailablity.dto';
-import fs from 'fs';
 import { ForgotPasswordDto } from 'src/dto/request/users/forgotPassword.dto';
 import { EmailOptions } from 'src/mail/mailOptions.model';
 import { generate } from 'rand-token';
@@ -50,7 +49,11 @@ export class UsersService {
             const { email, accessLayer, fullName }: TokenDto = savedItem;
             const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: await this.privateKey.getPrivateKey(), expiresIn: TIME.HOUR });
             Logger.log(`UsersService->createUser() got token: ${token}`);
-            return { message: LOGIN_REGISTER_MESSAGE, accessToken: token };
+            return {
+                message: LOGIN_REGISTER_MESSAGE, accessToken: token, 
+                isAdmin: false,
+                isRegularUser: true
+            };
         } catch (error) {
             Logger.error(`UsersService->createUser() has error occured: ${Utils.toString(error)}`);
             throw new InternalServerErrorException("Something got wrong- can't continue");
@@ -91,7 +94,12 @@ export class UsersService {
             await userWithEmail.save();
             const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: await this.privateKey.getPrivateKey(), expiresIn: TIME.HOUR });
             Logger.log(`UsersService->userLogin() got token: ${token}`);
-            return { message: LOGIN_REGISTER_MESSAGE, accessToken: token };
+            return {
+                message: LOGIN_REGISTER_MESSAGE,
+                accessToken: token,
+                isAdmin: accessLayer === AccessLayer.SUPER_ADMIN || accessLayer === AccessLayer.ADMIN,
+                isRegularUser: true
+            };
         } catch (error) {
             Logger.error(`UsersService->userLogin() has error occured: ${Utils.toString(error)}`);
             throw new InternalServerErrorException("Something got wrong- can't continue");
@@ -237,7 +245,7 @@ export class UsersService {
             const { accessLayer } = payload;
             return {
                 isAdmin: accessLayer === AccessLayer.SUPER_ADMIN || accessLayer === AccessLayer.ADMIN,
-                isRegularUser: accessLayer !== AccessLayer.VISITOR
+                isRegularUser: true
             }
 
 

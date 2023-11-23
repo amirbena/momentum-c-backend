@@ -13,6 +13,5 @@ export class UserAvailablityDto {
     @IsBoolean()
     isBanned: boolean;
 
-    @IsNotEmpty()
     user: TokenDto;
 }

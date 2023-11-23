@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedExceptionText } from 'src/constants/constants';
+import { TokenDto } from 'src/dto/request/users/tokenDto.dto';
 import { PrivateKey } from 'src/private-keys/private-keys';
 
 @Injectable()
@@ -21,10 +22,10 @@ export class AuthGuard implements CanActivate {
         {
           secret
         }
-      );
+      ) as TokenDto;
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      request['user'] = payload;
+      request.body['user'] = payload;
     } catch(error) {
       throw new UnauthorizedException(UnauthorizedExceptionText);
     }
