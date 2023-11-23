@@ -8,7 +8,7 @@ export class VideosBySection {
     @IsEnum(VideoSection)
     section: VideoSection;
 
-    @IsNotEmpty()
+
     user: TokenDto;
 
 }

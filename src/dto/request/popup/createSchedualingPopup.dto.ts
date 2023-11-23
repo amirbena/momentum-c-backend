@@ -29,6 +29,6 @@ export class CreateSchedualingPopup {
     @IsDate()
     scheudlingDate: Date;
 
-    @IsNotEmpty()
+    
     user: TokenDto;
 }
