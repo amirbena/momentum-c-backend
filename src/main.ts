@@ -1,15 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
-import { readFileSync } from 'fs';
-import { AgentOptions } from 'https';
+
 
 async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
   const origin = [process.env.FRONTEND_URI];
   if (process.env.NODE_ENV == "local") {
-    const app = await NestFactory.create(AppModule);
     app.enableCors({
       origin
     })
@@ -23,12 +21,11 @@ async function bootstrap() {
       origin.push(process.env.CHECK_URI);
     }
 
-    console.log("origin", origin);
-
-     app.enableCors({
-       origin
-     })
+    app.enableCors({
+      origin
+    })
   }
+
 
   await app.listen(parseInt(process.env.PORT || "8080"));
 }

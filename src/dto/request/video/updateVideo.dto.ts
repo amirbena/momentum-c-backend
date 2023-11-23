@@ -34,6 +34,6 @@ export class UpdateVideoDto {
     @IsUrl()
     link?: string;
 
-    @IsNotEmpty()
+
     user: TokenDto;
 }
