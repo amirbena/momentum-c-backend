@@ -34,6 +34,7 @@
     "@nestjs/jwt": "^10.1.1",
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/platform-express": "^10.2.8",
+    "@nestjs/schedule": "^4.0.0",
     "@types/redis": "^4.0.11",
     "aws-serverless-express": "^3.4.0",
     "bcrypt": "^5.1.1",
@@ -45,6 +46,8 @@
     "crypto": "^1.0.1",
     "express": "^4.18.2",
     "google-auth-library": "^9.0.0",
+    "google-spreadsheet": "^4.1.1",
+    "google-translate-api-x": "^10.6.7",
     "googleapis": "^126.0.1",
     "helmet": "^7.1.0",
     "ioredis": "^5.3.2",
@@ -53,7 +56,8 @@
     "rand-token": "^1.0.1",
     "redis": "^4.6.8",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "sheetjs": "^2.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
