@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Post, Put, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { PopupService } from './popup.service';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { Roles } from 'src/guards/roles/roles.decorator';
@@ -40,9 +40,8 @@ export class PopupController {
 
     @Post('/read-popups')
     @UseGuards(AuthGuard)
-    @UsePipes(ValidationPipe)
-    async getAllReadPopup(@Body() tokenDto: TokenDto):Promise<PopupDocument[]> {
-        return await this.popupService.showAllMessagesInHistory(tokenDto);
+    async getAllReadPopup(@Body() user: TokenDto, @Req() request: any): Promise<PopupDocument[]> {
+        return await this.popupService.showAllMessagesInHistory(user);
     }
 
     @Put()

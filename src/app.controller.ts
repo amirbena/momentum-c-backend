@@ -11,23 +11,20 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get()
+  @Get('/health')
   getInfo(): string {
     return "Hello";
   }
 
-  @Get() 
-  getHealth(): string{
-     return "Health";
+  @Get('/info')
+  getHealth(): string {
+    return "Health";
   }
 
-
-  @Post('/uploadFolder')
-  async createFolder(@Body() check: Record<any, string>) {
-    Logger.log('folderName', check);
-    return await this.googleService.createFolder(check.folderName);
+  @Get('/etsy')
+  async getEtsyData() {
+    return await this.googleService.accessEtsyDrives();
   }
-
   @Post('/readSheet')
   async sheets() {
     return await this.googleService.readSheetFile(SHEETS_CONTANT);

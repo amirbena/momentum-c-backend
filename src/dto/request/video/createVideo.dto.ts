@@ -30,6 +30,6 @@ export class CreateVideoDto {
     @IsUrl()
     link: string;
 
-    @IsNotEmpty()
+    
     user: TokenDto;
 }

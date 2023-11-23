@@ -67,3 +67,8 @@ export const MOMENTUM_GMAIL_CLIENT_SECRET = "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
 export const REDIRECT_URI = "https://developers.google.com/oauthplayground";
 export const MOMENTUM_GMAIL_REFRESH_TOKEN = "1//04dVOGKwOGS0tCgYIARAAGAQSNwF-L9IrBZJwmNfU3D_qkTG3krDyzWkLoxn3iWxGs1NRHZLGxdBB4pttdlSEmC9XqneuNx_U87s";
 export const MOMENTUM_GMAIL_ACCESS_TOKEN = "ya29.a0AfB_byDKsXbqsijK5mNSj9OjgUrHHdMktivYRbSfJ9YoKtagrkEYgQvxpecGtSMDARDOyFXSZbCBdOUlQ91JQFoF3ChDhUiWCSCW1hvbKSKGjsWqTGXp9V2R79puBhu5c7Dkcoi8ImpnDN9nJwv-cbNKtc9e_okeOhEKaCgYKAQ0SARMSFQHGX2MiGDOo1y4Is8XlMqqHXOkdnA0171";
+
+
+export const SHEETS_DRIVE_CLIENT_ID = "222522486064-cm54jgoebejna3d6v6l8apbfrhlk30fh.apps.googleusercontent.com";
+export const SHEETS_DRIVE_CLIENT_SECRET = "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";
+export const SHEET_DRIVE_EMAIL = "matanhaimguy@gmail.com";
