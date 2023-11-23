@@ -13,6 +13,9 @@ import { GoogleService } from './google/google.service';
 import { NotificationsModule } from './notifications/notifications.module';
 import { VideosModule } from './videos/videos.module';
 import { PopupModule } from './popup/popup.module';
+import { MailService } from './mail/mail.service';
+import { SellsModule } from './sells/sells.module';
+import { SchedualingModule } from './schedualing/schedualing.module';
 
 
 
@@ -24,8 +27,8 @@ import { PopupModule } from './popup/popup.module';
       port: parseInt(process.env.REDIS_PORT),
       password: process.env.REDIS_SOCKET_PASSWORD
     }
-  }), JwtModule.register({ signOptions: { expiresIn: TIME.DAY } }), MongooseModule.forRoot(`${process.env.MONGO_URI}`), UsersModule, NotificationsModule, VideosModule, PopupModule],
+  }), JwtModule.register({ signOptions: { expiresIn: TIME.DAY } }), MongooseModule.forRoot(`${process.env.MONGO_URI}`), UsersModule, NotificationsModule, VideosModule, PopupModule, SellsModule, SchedualingModule],
   controllers: [AppController],
-  providers: [AppService, PrivateKey, GoogleService],
+  providers: [AppService, PrivateKey, GoogleService, MailService],
 })
 export class AppModule { }

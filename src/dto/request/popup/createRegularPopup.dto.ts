@@ -25,6 +25,6 @@ export class CreateRegularPopup {
     @IsDate()
     creationDate: Date = new Date();
 
-    @IsNotEmpty()
+    
     user: TokenDto;
 }

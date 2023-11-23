@@ -32,6 +32,6 @@ export class UserUpdateDto {
     @IsEnum(AccessLayer)
     accessLayer?: AccessLayer;
 
-    @IsNotEmpty()
+
     user: TokenDto;
 }

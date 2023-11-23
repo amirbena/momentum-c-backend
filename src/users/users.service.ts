@@ -47,10 +47,12 @@ export class UsersService {
             const savedItem = await userItem.save();
             Logger.log(`UsersService->createUser() user registered successfully`);
             const { email, accessLayer, fullName }: TokenDto = savedItem;
-            const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: await this.privateKey.getPrivateKey(), expiresIn: TIME.HOUR });
+            const privateKey = await this.privateKey.getPrivateKey();
+            const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: privateKey, expiresIn: TIME.HOUR });
             Logger.log(`UsersService->createUser() got token: ${token}`);
             return {
-                message: LOGIN_REGISTER_MESSAGE, accessToken: token, 
+                message: LOGIN_REGISTER_MESSAGE,
+                accessToken: token,
                 isAdmin: false,
                 isRegularUser: true
             };
@@ -288,5 +290,17 @@ export class UsersService {
         }
         updatedItem.isForverBanned = true;
         return updatedItem;
+    }
+
+    async checkNameUserExist(name: string){
+        try {
+            const user = await this.userModel.findOne({fullName: { $regex: name, $options: 'i' }});
+            if(user){
+                return user.fullName;
+            }
+            return "";
+        } catch (error) {
+            return "";
+        }
     }
 }
