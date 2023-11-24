@@ -20,7 +20,6 @@ import { AccessTokenDto } from 'src/dto/request/users/accessToken.dto';
 import { TokenDto } from 'src/dto/request/users/tokenDto.dto';
 import { IsSamePasswordDto } from 'src/dto/request/users/isSamePassword.dto';
 
-
 @Controller('users')
 export class UsersController {
 
