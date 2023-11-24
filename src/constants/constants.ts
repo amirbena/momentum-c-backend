@@ -33,7 +33,7 @@ export const RAND_TOKEN_SIZE = 20;
 export const SECRET_KEY = "secretKey";
 export const TIME = {
     SECOND: 1,
-    MIN: 60,
+    MINUTE: 60,
     HOUR: 60 * 60,
     DAY: 60 * 60 * 24,
     WEEK: 60 * 60 * 24 * 7,
