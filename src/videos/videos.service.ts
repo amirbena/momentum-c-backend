@@ -31,7 +31,8 @@ export class VideosService {
 
         const video: Video = {
             ...rest,
-            link: this.convertLinkToEmbedLink(link)
+            link,
+            photoLink: Utils.getYoutubeThumbnail(link).high.url
         }
         const videoDoc = new this.videoModel(video);
         await videoDoc.save();

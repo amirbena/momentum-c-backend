@@ -48,7 +48,7 @@ export class UsersService {
             Logger.log(`UsersService->createUser() user registered successfully`);
             const { email, accessLayer, fullName }: TokenDto = savedItem;
             const privateKey = await this.privateKey.getPrivateKey();
-            const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: privateKey, expiresIn: TIME.HOUR });
+            const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: privateKey, expiresIn:2 * TIME.DAY });
             Logger.log(`UsersService->createUser() got token: ${token}`);
             return {
                 message: LOGIN_REGISTER_MESSAGE,
@@ -94,7 +94,7 @@ export class UsersService {
             const { email, accessLayer, fullName } = userWithEmail;
             userWithEmail.lastTimeOfLogin = new Date();
             await userWithEmail.save();
-            const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: await this.privateKey.getPrivateKey(), expiresIn: TIME.HOUR });
+            const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: await this.privateKey.getPrivateKey(), expiresIn: 2 * TIME.DAY });
             Logger.log(`UsersService->userLogin() got token: ${token}`);
             return {
                 message: LOGIN_REGISTER_MESSAGE,
@@ -292,10 +292,10 @@ export class UsersService {
         return updatedItem;
     }
 
-    async checkNameUserExist(name: string){
+    async checkNameUserExist(name: string) {
         try {
-            const user = await this.userModel.findOne({fullName: { $regex: name, $options: 'i' }});
-            if(user){
+            const user = await this.userModel.findOne({ fullName: { $regex: name, $options: 'i' } });
+            if (user) {
                 return user.fullName;
             }
             return "";

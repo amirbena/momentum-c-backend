@@ -22,6 +22,9 @@ export class Video {
     @Prop({ required: true, type: String })
     link: string;
 
+    @Prop({ required: true, type: String })
+    photoLink: string;
+
 }
 
 export const VideoSchema = SchemaFactory.createForClass(Video);

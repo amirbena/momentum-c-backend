@@ -17,7 +17,7 @@ export class PrivateKey {
                 Logger.log(`PrivateKey->checkPrivateKey() create valid key`);
                 privateKey = crypto.randomBytes(64).toString("hex");
                 await this.redis.set(SECRET_KEY, privateKey);
-                await this.redis.expire(SECRET_KEY,TIME.WEEK);
+                await this.redis.expire(SECRET_KEY, 6 * TIME.DAY);
             }
             return privateKey;
         } catch (error) {
