@@ -26,7 +26,7 @@ export class Popup {
     scheudlingDate?: Date;
 
     @Prop({ required: false, type: Array })
-    userReadIds: Types.ObjectId[];
+    userReadIds: string[];
 
 }
 
