@@ -48,13 +48,15 @@ export class UsersService {
             Logger.log(`UsersService->createUser() user registered successfully`);
             const { email, accessLayer, fullName }: TokenDto = savedItem;
             const privateKey = await this.privateKey.getPrivateKey();
-            const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: privateKey, expiresIn:2 * TIME.DAY });
+            const token = await this.jwtService.signAsync({ email, accessLayer, fullName }, { secret: privateKey, expiresIn: 2 * TIME.DAY });
             Logger.log(`UsersService->createUser() got token: ${token}`);
             return {
                 message: LOGIN_REGISTER_MESSAGE,
                 accessToken: token,
                 isAdmin: false,
-                isRegularUser: true
+                isRegularUser: true,
+                isEmployee: false,
+                isVisitorUser: true
             };
         } catch (error) {
             Logger.error(`UsersService->createUser() has error occured: ${Utils.toString(error)}`);
@@ -100,7 +102,9 @@ export class UsersService {
                 message: LOGIN_REGISTER_MESSAGE,
                 accessToken: token,
                 isAdmin: accessLayer === AccessLayer.SUPER_ADMIN || accessLayer === AccessLayer.ADMIN,
-                isRegularUser: true
+                isRegularUser: true,
+                isEmployee: accessLayer === AccessLayer.EMPLOYEE,
+                isVisitorUser: accessLayer === AccessLayer.VISITOR
             };
         } catch (error) {
             Logger.error(`UsersService->userLogin() has error occured: ${Utils.toString(error)}`);
@@ -109,8 +113,18 @@ export class UsersService {
     }
 
     async getAllUsers(tokenDto: TokenDto): Promise<UserDocument[]> {
-        Logger.log(`UsersService->getAllUsers() entered`);
-        const results: UserDocument[] = await this.userModel.find();
+        Logger.log(`UsersService->getAllUsers() entered with: ${Utils.toString(tokenDto)}`);
+        const { accessLayer } = tokenDto;
+        let results = [];
+        if (accessLayer === AccessLayer.EMPLOYEE) {
+            results = await this.getAllClients(tokenDto);
+        }
+        else if (accessLayer === AccessLayer.ADMIN) {
+            results = await this.getClientsAndEmployees(tokenDto)
+        }
+        else {
+            results = await this.getClientsAndEmployeesManagers(tokenDto);
+        }
         await this.updateUserDto(tokenDto);
         Logger.log(`UsersService->getAllUsers() got: ${Utils.toString(results)}`);
         return results;
@@ -120,7 +134,7 @@ export class UsersService {
         const findUser = await this.userModel.findOne({ fullName: tokenDto.fullName });
         if (!findUser) {
             Logger.warn(`UsersService->updateUserDto() user is not found`);
-            throw new NotFoundException("NOT FOUND");
+            return;
         }
         findUser.lastTimeOfMakingAction = new Date();
         findUser.timeUsingApplication += Math.floor((findUser.lastTimeOfMakingAction.getTime() - findUser.lastTimeOfLogin.getTime()) / 1000);
@@ -163,6 +177,39 @@ export class UsersService {
             throw new NotFoundException("Can't find id");
         }
         return id;
+    }
+
+    async getAllClients(user: TokenDto) {
+        try {
+            Logger.log(`UsersService->getAllClients() entered with: ${Utils.toString(user)}`);
+            const { email } = user;
+            const clients = await this.userModel.find({ email: { $ne: email }, accessLayer: { $in: [AccessLayer.VISITOR, AccessLayer.PAYER_CLIENT] } })
+            return clients;
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async getClientsAndEmployees(user: TokenDto) {
+        try {
+            Logger.log(`UsersService->getAllClientsAndEmployees() entered with: ${Utils.toString(user)}`);
+            const { email } = user;
+            const clients = await this.userModel.find({ email: { $ne: email }, accessLayer: { $in: [AccessLayer.VISITOR, AccessLayer.PAYER_CLIENT, AccessLayer.EMPLOYEE] } })
+            return clients;
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async getClientsAndEmployeesManagers(user: TokenDto) {
+        try {
+            Logger.log(`UsersService->getAllClientsAndEmployeesManagers() entered with: ${Utils.toString(user)}`);
+            const { email } = user;
+            const clients = await this.userModel.find({ email: { $ne: email }, accessLayer: { $in: [AccessLayer.VISITOR, AccessLayer.PAYER_CLIENT, AccessLayer.EMPLOYEE, AccessLayer.ADMIN] } })
+            return clients;
+        } catch (error) {
+            return [];
+        }
     }
 
     async changeUserAvaialblity(userAvailablityDto: UserAvailablityDto): Promise<UserDocument> {
@@ -241,13 +288,17 @@ export class UsersService {
                 Logger.warn(`UsersService->defineToken() got error`);
                 return {
                     isAdmin: false,
-                    isRegularUser: false
+                    isRegularUser: false,
+                    isEmployee: false,
+                    isVisitorUser: false
                 }
             }
             const { accessLayer } = payload;
             return {
                 isAdmin: accessLayer === AccessLayer.SUPER_ADMIN || accessLayer === AccessLayer.ADMIN,
-                isRegularUser: true
+                isRegularUser: true,
+                isEmployee: accessLayer === AccessLayer.EMPLOYEE,
+                isVisitorUser: accessLayer === AccessLayer.VISITOR
             }
 
 
@@ -255,7 +306,9 @@ export class UsersService {
             Logger.warn(`UsersService->defineToken() got: ${Utils.toString(error)}`);
             return {
                 isAdmin: false,
-                isRegularUser: false
+                isRegularUser: false,
+                isEmployee: false,
+                isVisitorUser: false
             }
         }
     }

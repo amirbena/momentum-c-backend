@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, UsePipes, ValidationPipe, Body, Logger, Put, Delete, Param } from '@nestjs/common';
+import { Controller, Post, UseGuards, UsePipes, ValidationPipe, Body, Logger, Put, Delete, Param, HttpCode, HttpStatus } from '@nestjs/common';
 import { VideosService } from './videos.service';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
@@ -19,6 +19,7 @@ export class VideosController {
     @Roles(AccessLayer.SUPER_ADMIN, AccessLayer.ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async createVideo(@Body() createVideoDto: CreateVideoDto) {
         Logger.log(`VideosController->createVideo() entered with: ${Utils.toString(createVideoDto)}`);
         const result = await this.videosService.createVideo(createVideoDto);
@@ -29,6 +30,7 @@ export class VideosController {
     @Post('/videos-by-access-layer')
     @UseGuards(AuthGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async videosByAccessLayer(@Body() videosBySection: VideosBySection): Promise<VideoDocument[]> {
         Logger.log(`VideosController->videosByAccessLayer() entered with: ${Utils.toString(videosBySection)}`);
         const videos = await this.videosService.getVideosBySection(videosBySection);
@@ -40,6 +42,7 @@ export class VideosController {
     @Roles(AccessLayer.SUPER_ADMIN, AccessLayer.ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async updateVideo(@Body() updateVideoDto: UpdateVideoDto) {
         Logger.log(`VideosController->updateVideo() entered with: ${Utils.toString(updateVideoDto)}`);
         const updatedVideo = await this.videosService.updateVideo(updateVideoDto)
@@ -51,6 +54,7 @@ export class VideosController {
     @Roles(AccessLayer.SUPER_ADMIN, AccessLayer.ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async deleteVideo(@Param('id') videoId: Types.ObjectId) {
         Logger.log(`VideosController->deleteVideo() entered with: ${Utils.toString(videoId)}`);
         const deletedVideo = await this.videosService.deleteVideo(videoId);
