@@ -47,6 +47,14 @@ export class PopupService {
         return { message: PopupCreation.SCHEDUALING_POPUP };
     }
 
+    private sortPopupToShow(popups: PopupDocument[], user: TokenDto, id: string) {
+        const { accessLayer } = user
+        return popups.filter(popup => {
+            const { accessLayers, userReadIds } = popup;
+            return accessLayers.includes(accessLayer) && !userReadIds.includes(id);
+        })
+    }
+
     async showPopupsAccordingUser(popupToUser: RetreivePopups): Promise<PopupDocument[]> {
         try {
             Logger.log(`PopupService->showPopupsAccordingUser() entered with: ${Utils.toString(popupToUser)}`);
@@ -54,7 +62,8 @@ export class PopupService {
             const { dateBefore, dateAfter } = Utils.buildDateRangeOfDate(dateToCheck);
             const id = await this.userService.getIdByFullName(user.fullName);
             if (!id) return [];
-            const popups = await this.popupModel.find({ $or: [{ creationDate: { $gte: dateBefore, $lte: dateAfter } }, { scheudlingDate: { $lte: dateToCheck } }], userReadIds: { $nin: [id] } });
+            let popups = await this.popupModel.find({ $or: [{ creationDate: { $gte: dateBefore, $lte: dateAfter } }, { scheudlingDate: { $lte: dateToCheck } }] });
+            popups = this.sortPopupToShow(popups, user, id);
             this.sortPopups(popups);
             await this.userService.updateUserDto(user);
             Logger.log(`PopupService->showPopupsAccordingUser() got popups, ${Utils.toString(popups)}`);
@@ -67,17 +76,22 @@ export class PopupService {
 
 
     async updatePopup(updatePopup: UpdatePopupDto): Promise<void> {
-        Logger.log(`PopupService->updatePopup() entered with: ${Utils.toString(updatePopup)}`);
-        const { popupId, user } = updatePopup;
-        const popup = await this.popupModel.findById(popupId);
-        if (!popup) return;
-        let userId = await this.userService.getIdByFullName(user.fullName);
-        if (!userId) return;
-        userId = userId as Types.ObjectId;
-        popup.userReadIds = [...popup.userReadIds, userId];
-        await popup.save();
-        await this.userService.updateUserDto(user);
-        return;
+        try {
+            Logger.log(`PopupService->updatePopup() entered with: ${Utils.toString(updatePopup)}`);
+            const { popupId, user } = updatePopup;
+            const popup = await this.popupModel.findById(popupId);
+            if (!popup) return;
+            let userId = await this.userService.getIdByFullName(user.fullName);
+            if (!userId) return;
+
+            popup.userReadIds = [...popup.userReadIds, userId];
+            await this.userService.updateUserDto(user);
+            await popup.save();
+            return;
+        } catch (error) {
+            return;
+        }
+
     }
 
     private sortPopups(popupArray: PopupDocument[]) {
@@ -89,16 +103,25 @@ export class PopupService {
         })
     }
 
+    private setMessagesToShow(popups: PopupDocument[], user: TokenDto, id: string) {
+        const { accessLayer } = user
+        return popups.filter(popup => {
+            const { accessLayers, userReadIds } = popup;
+            return accessLayers.includes(accessLayer) && userReadIds.includes(id);
+        })
+    }
+
 
     async showAllMessagesInHistory(tokenDto: TokenDto): Promise<PopupDocument[]> {
         try {
             Logger.log(`PopupService->showAllMessagesInHistory() entered with: ${Utils.toString(tokenDto)}`);
             const id = await this.userService.getIdByFullName(tokenDto.fullName);
             if (!id) return [];
-            const popups = await this.popupModel.find({ userReadIds: { $in: [id] } });
-            this.sortPopups(popups);
-            Logger.log(`PopupService->showAllMessagesInHistory() got popups, ${Utils.toString(popups)}`);
-            return popups;
+            let messages = await this.popupModel.find({});
+            messages = this.setMessagesToShow(messages, tokenDto, id);
+            this.sortPopups(messages);
+            Logger.log(`PopupService->showAllMessagesInHistory() got popups, ${Utils.toString(messages)}`);
+            return messages;
         } catch (error) {
             Logger.error(`PopupService->showAllMessagesInHistory() an error occured: ${Utils.toString(error.message)}`);
             return [];

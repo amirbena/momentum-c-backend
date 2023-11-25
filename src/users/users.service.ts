@@ -64,13 +64,14 @@ export class UsersService {
         }
     }
 
-    async getIdByFullName(fullName: string): Promise<string | Types.ObjectId> {
+    async getIdByFullName(fullName: string): Promise<string> {
         Logger.log(`UsersService->getIdByFullName() entered with: ${fullName}`)
         const foundUser = await this.userModel.findOne({ fullName });
+        Logger.log(`UserService->getIdFullName() result: ${Utils.toString(foundUser)}`);
         if (!foundUser) {
             return "";
         }
-        return foundUser._id;
+        return foundUser._id.toString();
     }
 
     async userLogin(loginDto: LoginDto): Promise<LoginResponse> {
