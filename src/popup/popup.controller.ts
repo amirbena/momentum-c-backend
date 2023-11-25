@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Put, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { PopupService } from './popup.service';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { Roles } from 'src/guards/roles/roles.decorator';
@@ -19,6 +19,7 @@ export class PopupController {
     @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async createRegularPopup(@Body() regularPopup: CreateRegularPopup) {
         return await this.popupService.createRegularPopup(regularPopup);
     }
@@ -27,6 +28,7 @@ export class PopupController {
     @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async createSchedualingPopup(@Body() regularPopup: CreateRegularPopup) {
         return await this.popupService.createRegularPopup(regularPopup);
     }
@@ -34,6 +36,7 @@ export class PopupController {
     @Post()
     @UseGuards(AuthGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async getAllPopups(@Body() retreivePopups: RetreivePopups): Promise<PopupDocument[]> {
         return await this.popupService.showPopupsAccordingUser(retreivePopups);
     }

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UsePipes, ValidationPipe, Logger, Res, Get, UseGuards, Put, Delete, Param } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, ValidationPipe, Logger, Res, Get, UseGuards, Put, Delete, Param, HttpCode, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDto } from 'src/dto/request/users/user.dto';
 import { LoginDto } from 'src/dto/request/users/login.dto';
@@ -27,6 +27,7 @@ export class UsersController {
 
     @Post('/register')
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async register(@Body() user: UserDto): Promise<RegisterResponse> {
         Logger.log(`UsersController->register() entered with: ${Utils.toString(user)}`);
         const result = await this.userService.createUser(user);
@@ -36,6 +37,7 @@ export class UsersController {
 
     @Post('/login')
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async login(@Body() userlogin: LoginDto): Promise<LoginResponse> {
         Logger.log(`UsersController->register() entered with: ${Utils.toString(userlogin)}`);
         const result = await this.userService.userLogin(userlogin);
@@ -46,12 +48,14 @@ export class UsersController {
     @Post('/logout')
     @UseGuards(AuthGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async logout(@Body() user: TokenDto) {
         return await this.userService.logout(user);
     }
 
     @Get()
     @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.OK)
     async getAllUsers(@Body() user: TokenDto): Promise<UserDocument[]> {
         Logger.log(`UsersController->getAllUsers() entered`);
         const results = await this.userService.getAllUsers(user);
@@ -60,9 +64,10 @@ export class UsersController {
 
 
     @Put('/update-user')
-    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN)
+    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN,AccessLayer.EMPLOYEE)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async changeUserDetails(@Body() userUpdateDto: UserUpdateDto): Promise<UserDocument> {
         Logger.log(`UsersController->changeUserDetails() entered with: ${Utils.toString(userUpdateDto)}`);
         const updated = await this.userService.changeUserDetails(userUpdateDto);
@@ -71,9 +76,10 @@ export class UsersController {
     }
 
     @Delete('/:id')
-    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN)
+    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN,AccessLayer.EMPLOYEE)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async deleteUser(@Param('id') id: Types.ObjectId) {
         Logger.log(`UsersController->deleteUser() entered with: ${Utils.toString(id)}`);
         const deletedId = await this.userService.deleteUser(id);
@@ -83,9 +89,10 @@ export class UsersController {
     }
 
     @Delete('/ban-forver/:id')
-    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN)
+    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN,AccessLayer.EMPLOYEE)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async banUserForver(@Param('id') id: Types.ObjectId) {
         Logger.log(`UsersController->banUserForver() entered with: ${Utils.toString(id)}`);
         const deletedForverUser = await this.userService.banUser(id);
@@ -95,9 +102,10 @@ export class UsersController {
     }
 
     @Put('/suspend-user')
-    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN)
+    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN,AccessLayer.EMPLOYEE)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async changeUserAvailabilty(@Body() userAvailablityDto: UserAvailablityDto) {
         Logger.log(`UsersController->changeUserAvailabilty() entered with: ${Utils.toString(userAvailablityDto)}`);
         const result = await this.userService.changeUserAvaialblity(userAvailablityDto);
@@ -108,6 +116,7 @@ export class UsersController {
 
     @Post('/define-token')
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async defineToken(@Body() accessTokenDto: AccessTokenDto) {
         return await this.userService.defineToken(accessTokenDto);
     }
@@ -115,18 +124,21 @@ export class UsersController {
     @Post('/is-same-password')
     @UseGuards(AuthGuard)
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async isSamePassword(@Body() isSamePassword: IsSamePasswordDto) {
         return await this.userService.isSamePassword(isSamePassword);
     }
 
     @Put('/forgot-password')
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
         return await this.userService.forgotPassword(forgotPasswordDto);
     }
 
     @Put('/reset-password')
     @UsePipes(ValidationPipe)
+    @HttpCode(HttpStatus.OK)
     async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
         return await this.userService.resetPassword(resetPasswordDto);
     }

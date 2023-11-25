@@ -2,6 +2,7 @@ import { IsArray, IsDate, IsNotEmpty, IsOptional, IsUrl, MaxLength } from "class
 import { AccessLayer, MAX_NAME_LENGTH } from "src/constants/constants";
 import { IsAccessLayerArray } from "src/decorators/isAccessLayerArray.decorator";
 import { TokenDto } from "../users/tokenDto.dto";
+import { Transform } from "class-transformer";
 
 export class CreateSchedualingPopup {
     @IsNotEmpty()
@@ -21,11 +22,13 @@ export class CreateSchedualingPopup {
     @IsUrl()
     link: string;
 
-    @IsOptional()
+    @IsNotEmpty()
+    @Transform( ({ value }) => new Date(value))
     @IsDate()
-    creationDate: Date = new Date();
+    creationDate: Date;
 
     @IsNotEmpty()
+    @Transform( ({ value }) => new Date(value))
     @IsDate()
     scheudlingDate: Date;
 
