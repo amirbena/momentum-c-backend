@@ -64,7 +64,7 @@ export class UsersController {
 
 
     @Put('/update-user')
-    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN,AccessLayer.EMPLOYEE)
+    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN, AccessLayer.EMPLOYEE)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
     @HttpCode(HttpStatus.OK)
@@ -76,7 +76,7 @@ export class UsersController {
     }
 
     @Delete('/:id')
-    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN,AccessLayer.EMPLOYEE)
+    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN, AccessLayer.EMPLOYEE)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
     @HttpCode(HttpStatus.OK)
@@ -89,7 +89,7 @@ export class UsersController {
     }
 
     @Delete('/ban-forver/:id')
-    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN,AccessLayer.EMPLOYEE)
+    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN, AccessLayer.EMPLOYEE)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
     @HttpCode(HttpStatus.OK)
@@ -102,7 +102,7 @@ export class UsersController {
     }
 
     @Put('/suspend-user')
-    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN,AccessLayer.EMPLOYEE)
+    @Roles(AccessLayer.ADMIN, AccessLayer.SUPER_ADMIN, AccessLayer.EMPLOYEE)
     @UseGuards(AuthGuard, RolesGuard)
     @UsePipes(ValidationPipe)
     @HttpCode(HttpStatus.OK)
