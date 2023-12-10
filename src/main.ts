@@ -6,10 +6,10 @@ import helmet from 'helmet';
 async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
-  const origin = [process.env.FRONTEND_URI];
+  const origin = [process.env.FRONTEND_URI,process.env.APP_URI]; 
   if (process.env.NODE_ENV == "local") {
     app.enableCors({
-      origin
+      origin: "*"
     })
   }
 
@@ -22,8 +22,11 @@ async function bootstrap() {
     }
 
     app.enableCors({
-      origin
-    })
+      origin: '*',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      preflightContinue: false,
+      optionsSuccessStatus: 204
+    });
   }
 
 
